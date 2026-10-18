@@ -1,13 +1,29 @@
 {
   "data": {
-    "n_total": 24783,
-    "n_train": 14869,
-    "n_val": 4957,
-    "n_test": 4957,
-    "class_counts": {
-      "hate": 1430,
-      "offensive": 19190,
-      "neither": 4163
+    "davidson": {
+      "n_total": 24783,
+      "n_train": 14869,
+      "n_val": 4957,
+      "n_test": 4957,
+      "class_counts": {
+        "hate": 1430,
+        "offensive": 19190,
+        "neither": 4163
+      }
+    },
+    "olid": {
+      "train": {
+        "offensive": 3941,
+        "neither": 7975
+      },
+      "val": {
+        "offensive": 459,
+        "neither": 865
+      },
+      "test": {
+        "offensive": 240,
+        "neither": 620
+      }
     }
   },
   "original": {
@@ -264,47 +280,734 @@
       ]
     ]
   },
-  "improved": {
-    "accuracy": 0.885,
-    "weighted_f1": 0.8894,
-    "macro_f1": 0.7389,
+  "bigram_svm": {
+    "davidson_test": {
+      "accuracy": 0.8925,
+      "weighted_f1": 0.8825,
+      "macro_f1": 0.6934,
+      "per_class": {
+        "hate": {
+          "precision": 0.5197,
+          "recall": 0.2308,
+          "f1": 0.3196,
+          "support": 286
+        },
+        "offensive": {
+          "precision": 0.9174,
+          "recall": 0.9578,
+          "f1": 0.9372,
+          "support": 3839
+        },
+        "neither": {
+          "precision": 0.8285,
+          "recall": 0.8185,
+          "f1": 0.8235,
+          "support": 832
+        }
+      },
+      "confusion_matrix": [
+        [
+          66,
+          187,
+          33
+        ],
+        [
+          54,
+          3677,
+          108
+        ],
+        [
+          7,
+          144,
+          681
+        ]
+      ]
+    },
+    "olid_test": {
+      "accuracy": 0.4884,
+      "weighted_f1": 0.5113,
+      "macro_f1": 0.3252,
+      "per_class": {
+        "hate": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 0
+        },
+        "offensive": {
+          "precision": 0.3168,
+          "recall": 0.6917,
+          "f1": 0.4346,
+          "support": 240
+        },
+        "neither": {
+          "precision": 0.7962,
+          "recall": 0.4097,
+          "f1": 0.541,
+          "support": 620
+        }
+      },
+      "confusion_matrix": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          9,
+          166,
+          65
+        ],
+        [
+          8,
+          358,
+          254
+        ]
+      ]
+    },
+    "checks": {
+      "everyday_speech": {
+        "olid_not_offensive_n": 620,
+        "olid_pass_rate": 0.4097,
+        "olid_not_hate_rate": 0.9871,
+        "examples_pass_rate": 0.1333,
+        "examples_flagged": [
+          "Had a great day at the beach with my family",
+          "Exams next week and I'm so stressed",
+          "I'm a proud Muslim woman",
+          "My gay best friend is the funniest person I know",
+          "Happy Pride month to all my LGBTQ friends",
+          "Black history month starts today",
+          "Eid Mubarak to everyone celebrating",
+          "Shabbat shalom everyone",
+          "My grandma is deaf and the funniest person I know",
+          "Women's soccer final tonight, let's go!",
+          "Going to the mosque with my dad",
+          "yall really finna make me laugh today lol",
+          "Proud of my immigrant parents and everything they built"
+        ]
+      },
+      "negation": {
+        "n_pairs": 133,
+        "score_drops_pass_rate": 0.6241,
+        "not_called_hate_pass_rate": 0.8195
+      },
+      "identity_swap": {
+        "n_templates": 442,
+        "consistent_pass_rate": 0.4796,
+        "mean_hate_score_spread": 0.5669,
+        "hate_detected_by_group": {
+          "Muslims": 0.0456,
+          "black people": 0.3894,
+          "disabled people": 0.0643,
+          "gay people": 0.1823,
+          "immigrants": 0.0196,
+          "trans people": 0.07,
+          "women": 0.0134
+        }
+      },
+      "counter_speech": {
+        "n": 314,
+        "not_called_hate_pass_rate": 0.9045
+      }
+    }
+  },
+  "original_checks": {
+    "everyday_speech": {
+      "olid_not_offensive_n": 620,
+      "olid_pass_rate": 0.7613,
+      "olid_not_hate_rate": 0.9984,
+      "examples_pass_rate": 0.6,
+      "examples_flagged": [
+        "I'm a proud Muslim woman",
+        "I'm queer and I love who I am",
+        "My gay best friend is the funniest person I know",
+        "My grandma is deaf and the funniest person I know",
+        "yall really finna make me laugh today lol",
+        "Proud of my immigrant parents and everything they built"
+      ]
+    },
+    "negation": {
+      "n_pairs": 133,
+      "score_drops_pass_rate": 0.6842,
+      "not_called_hate_pass_rate": 1.0
+    },
+    "identity_swap": {
+      "n_templates": 442,
+      "consistent_pass_rate": 0.2805,
+      "mean_hate_score_spread": 0.7559,
+      "hate_detected_by_group": {
+        "Muslims": 0.0912,
+        "black people": 0.0028,
+        "disabled people": 0.0027,
+        "gay people": 0.0027,
+        "immigrants": 0.0812,
+        "trans people": 0.0,
+        "women": 0.0188
+      }
+    },
+    "counter_speech": {
+      "n": 314,
+      "not_called_hate_pass_rate": 0.9968
+    }
+  },
+  "original_olid_test": {
+    "accuracy": 0.693,
+    "weighted_f1": 0.6993,
+    "macro_f1": 0.4225,
     "per_class": {
       "hate": {
-        "precision": 0.3909,
-        "recall": 0.4825,
-        "f1": 0.4319,
-        "support": 286
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 0
       },
       "offensive": {
-        "precision": 0.9558,
-        "recall": 0.9078,
-        "f1": 0.9312,
-        "support": 3839
+        "precision": 0.4576,
+        "recall": 0.5167,
+        "f1": 0.4853,
+        "support": 240
       },
       "neither": {
-        "precision": 0.7975,
-        "recall": 0.9183,
-        "f1": 0.8536,
-        "support": 832
+        "precision": 0.8041,
+        "recall": 0.7613,
+        "f1": 0.7821,
+        "support": 620
       }
     },
     "confusion_matrix": [
       [
-        138,
-        109,
-        39
+        0,
+        0,
+        0
       ],
       [
-        199,
-        3485,
-        155
+        1,
+        124,
+        115
       ],
       [
-        16,
-        52,
-        764
+        1,
+        147,
+        472
       ]
     ]
+  },
+  "variants": {
+    "TF-IDF + balanced LR": {
+      "davidson_test": {
+        "accuracy": 0.8842,
+        "weighted_f1": 0.8885,
+        "macro_f1": 0.736,
+        "per_class": {
+          "hate": {
+            "precision": 0.3846,
+            "recall": 0.472,
+            "f1": 0.4239,
+            "support": 286
+          },
+          "offensive": {
+            "precision": 0.9556,
+            "recall": 0.9073,
+            "f1": 0.9308,
+            "support": 3839
+          },
+          "neither": {
+            "precision": 0.796,
+            "recall": 0.9195,
+            "f1": 0.8533,
+            "support": 832
+          }
+        },
+        "confusion_matrix": [
+          [
+            135,
+            111,
+            40
+          ],
+          [
+            200,
+            3483,
+            156
+          ],
+          [
+            16,
+            51,
+            765
+          ]
+        ]
+      },
+      "olid_test": {
+        "accuracy": 0.6884,
+        "weighted_f1": 0.6955,
+        "macro_f1": 0.4058,
+        "per_class": {
+          "hate": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 0
+          },
+          "offensive": {
+            "precision": 0.4706,
+            "recall": 0.3667,
+            "f1": 0.4122,
+            "support": 240
+          },
+          "neither": {
+            "precision": 0.7975,
+            "recall": 0.8129,
+            "f1": 0.8051,
+            "support": 620
+          }
+        },
+        "confusion_matrix": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            24,
+            88,
+            128
+          ],
+          [
+            17,
+            99,
+            504
+          ]
+        ]
+      },
+      "checks": {
+        "everyday_speech": {
+          "olid_not_offensive_n": 620,
+          "olid_pass_rate": 0.8129,
+          "olid_not_hate_rate": 0.9726,
+          "examples_pass_rate": 0.7333,
+          "examples_flagged": [
+            "Had a great day at the beach with my family",
+            "Exams next week and I'm so stressed",
+            "I'm a proud Muslim woman",
+            "I'm queer and I love who I am"
+          ]
+        },
+        "negation": {
+          "n_pairs": 133,
+          "score_drops_pass_rate": 0.5714,
+          "not_called_hate_pass_rate": 0.6015
+        },
+        "identity_swap": {
+          "n_templates": 442,
+          "consistent_pass_rate": 0.2783,
+          "mean_hate_score_spread": 0.1918,
+          "hate_detected_by_group": {
+            "Muslims": 0.3566,
+            "black people": 0.6106,
+            "disabled people": 0.2788,
+            "gay people": 0.6542,
+            "immigrants": 0.1064,
+            "trans people": 0.1709,
+            "women": 0.1796
+          }
+        },
+        "counter_speech": {
+          "n": 314,
+          "not_called_hate_pass_rate": 0.5924
+        }
+      }
+    },
+    "+ everyday tweets (OLID)": {
+      "davidson_test": {
+        "accuracy": 0.8905,
+        "weighted_f1": 0.8919,
+        "macro_f1": 0.7328,
+        "per_class": {
+          "hate": {
+            "precision": 0.3894,
+            "recall": 0.4126,
+            "f1": 0.4007,
+            "support": 286
+          },
+          "offensive": {
+            "precision": 0.9468,
+            "recall": 0.9232,
+            "f1": 0.9348,
+            "support": 3839
+          },
+          "neither": {
+            "precision": 0.8255,
+            "recall": 0.9038,
+            "f1": 0.8629,
+            "support": 832
+          }
+        },
+        "confusion_matrix": [
+          [
+            118,
+            128,
+            40
+          ],
+          [
+            176,
+            3544,
+            119
+          ],
+          [
+            9,
+            71,
+            752
+          ]
+        ]
+      },
+      "olid_test": {
+        "accuracy": 0.8023,
+        "weighted_f1": 0.7931,
+        "macro_f1": 0.4863,
+        "per_class": {
+          "hate": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 0
+          },
+          "offensive": {
+            "precision": 0.7059,
+            "recall": 0.5,
+            "f1": 0.5854,
+            "support": 240
+          },
+          "neither": {
+            "precision": 0.8321,
+            "recall": 0.9194,
+            "f1": 0.8736,
+            "support": 620
+          }
+        },
+        "confusion_matrix": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            5,
+            120,
+            115
+          ],
+          [
+            0,
+            50,
+            570
+          ]
+        ]
+      },
+      "checks": {
+        "everyday_speech": {
+          "olid_not_offensive_n": 620,
+          "olid_pass_rate": 0.9194,
+          "olid_not_hate_rate": 1.0,
+          "examples_pass_rate": 0.9333,
+          "examples_flagged": [
+            "I'm queer and I love who I am"
+          ]
+        },
+        "negation": {
+          "n_pairs": 133,
+          "score_drops_pass_rate": 0.7669,
+          "not_called_hate_pass_rate": 0.9173
+        },
+        "identity_swap": {
+          "n_templates": 442,
+          "consistent_pass_rate": 0.3032,
+          "mean_hate_score_spread": 0.1357,
+          "hate_detected_by_group": {
+            "Muslims": 0.1019,
+            "black people": 0.2437,
+            "disabled people": 0.1046,
+            "gay people": 0.3512,
+            "immigrants": 0.0308,
+            "trans people": 0.0196,
+            "women": 0.0322
+          }
+        },
+        "counter_speech": {
+          "n": 314,
+          "not_called_hate_pass_rate": 0.828
+        }
+      }
+    },
+    "+ negation marking": {
+      "davidson_test": {
+        "accuracy": 0.8913,
+        "weighted_f1": 0.8925,
+        "macro_f1": 0.7361,
+        "per_class": {
+          "hate": {
+            "precision": 0.4013,
+            "recall": 0.4196,
+            "f1": 0.4103,
+            "support": 286
+          },
+          "offensive": {
+            "precision": 0.9461,
+            "recall": 0.9237,
+            "f1": 0.9348,
+            "support": 3839
+          },
+          "neither": {
+            "precision": 0.8264,
+            "recall": 0.9038,
+            "f1": 0.8634,
+            "support": 832
+          }
+        },
+        "confusion_matrix": [
+          [
+            120,
+            132,
+            34
+          ],
+          [
+            169,
+            3546,
+            124
+          ],
+          [
+            10,
+            70,
+            752
+          ]
+        ]
+      },
+      "olid_test": {
+        "accuracy": 0.7907,
+        "weighted_f1": 0.7842,
+        "macro_f1": 0.4806,
+        "per_class": {
+          "hate": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 0
+          },
+          "offensive": {
+            "precision": 0.6613,
+            "recall": 0.5125,
+            "f1": 0.5775,
+            "support": 240
+          },
+          "neither": {
+            "precision": 0.8326,
+            "recall": 0.8984,
+            "f1": 0.8642,
+            "support": 620
+          }
+        },
+        "confusion_matrix": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            5,
+            123,
+            112
+          ],
+          [
+            0,
+            63,
+            557
+          ]
+        ]
+      },
+      "checks": {
+        "everyday_speech": {
+          "olid_not_offensive_n": 620,
+          "olid_pass_rate": 0.8984,
+          "olid_not_hate_rate": 1.0,
+          "examples_pass_rate": 0.8667,
+          "examples_flagged": [
+            "I'm queer and I love who I am",
+            "Going to the mosque with my dad"
+          ]
+        },
+        "negation": {
+          "n_pairs": 133,
+          "score_drops_pass_rate": 0.7519,
+          "not_called_hate_pass_rate": 0.9474
+        },
+        "identity_swap": {
+          "n_templates": 442,
+          "consistent_pass_rate": 0.3122,
+          "mean_hate_score_spread": 0.1483,
+          "hate_detected_by_group": {
+            "Muslims": 0.0965,
+            "black people": 0.2269,
+            "disabled people": 0.1072,
+            "gay people": 0.3753,
+            "immigrants": 0.0308,
+            "trans people": 0.0252,
+            "women": 0.0429
+          }
+        },
+        "counter_speech": {
+          "n": 314,
+          "not_called_hate_pass_rate": 0.8694
+        }
+      }
+    },
+    "+ identity swaps (final)": {
+      "davidson_test": {
+        "accuracy": 0.8894,
+        "weighted_f1": 0.8907,
+        "macro_f1": 0.7305,
+        "per_class": {
+          "hate": {
+            "precision": 0.388,
+            "recall": 0.4056,
+            "f1": 0.3966,
+            "support": 286
+          },
+          "offensive": {
+            "precision": 0.9451,
+            "recall": 0.9232,
+            "f1": 0.934,
+            "support": 3839
+          },
+          "neither": {
+            "precision": 0.8249,
+            "recall": 0.9002,
+            "f1": 0.8609,
+            "support": 832
+          }
+        },
+        "confusion_matrix": [
+          [
+            116,
+            136,
+            34
+          ],
+          [
+            170,
+            3544,
+            125
+          ],
+          [
+            13,
+            70,
+            749
+          ]
+        ]
+      },
+      "olid_test": {
+        "accuracy": 0.7907,
+        "weighted_f1": 0.7835,
+        "macro_f1": 0.479,
+        "per_class": {
+          "hate": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 0
+          },
+          "offensive": {
+            "precision": 0.6667,
+            "recall": 0.5,
+            "f1": 0.5714,
+            "support": 240
+          },
+          "neither": {
+            "precision": 0.8309,
+            "recall": 0.9032,
+            "f1": 0.8655,
+            "support": 620
+          }
+        },
+        "confusion_matrix": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            6,
+            120,
+            114
+          ],
+          [
+            0,
+            60,
+            560
+          ]
+        ]
+      },
+      "checks": {
+        "everyday_speech": {
+          "olid_not_offensive_n": 620,
+          "olid_pass_rate": 0.9032,
+          "olid_not_hate_rate": 1.0,
+          "examples_pass_rate": 0.8667,
+          "examples_flagged": [
+            "I'm queer and I love who I am",
+            "Going to the mosque with my dad"
+          ]
+        },
+        "negation": {
+          "n_pairs": 133,
+          "score_drops_pass_rate": 0.7895,
+          "not_called_hate_pass_rate": 0.9398
+        },
+        "identity_swap": {
+          "n_templates": 442,
+          "consistent_pass_rate": 0.3801,
+          "mean_hate_score_spread": 0.137,
+          "hate_detected_by_group": {
+            "Muslims": 0.0643,
+            "black people": 0.3165,
+            "disabled people": 0.0322,
+            "gay people": 0.3164,
+            "immigrants": 0.0336,
+            "trans people": 0.2913,
+            "women": 0.0134
+          }
+        },
+        "counter_speech": {
+          "n": 314,
+          "not_called_hate_pass_rate": 0.879
+        }
+      }
+    }
+  },
+  "ngram_weights": {
+    "TF-IDF + balanced LR": {
+      "hate": {
+        "hate": 1.3601,
+        "offensive": -0.089,
+        "neither": -1.2711
+      },
+      "don't hate": null,
+      "dont hate": null
+    },
+    "+ identity swaps (final)": {
+      "hate": {
+        "hate": 1.5256,
+        "offensive": -0.4117,
+        "neither": -1.1139
+      },
+      "neg_hate": {
+        "hate": -0.4577,
+        "offensive": 1.214,
+        "neither": -0.7563
+      },
+      "don't neg_hate": {
+        "hate": -0.3089,
+        "offensive": 0.638,
+        "neither": -0.3291
+      },
+      "dont neg_hate": null
+    }
   },
   "hatecheck": {
     "original": {
@@ -324,21 +1027,55 @@
         "women": 0.0188
       }
     },
-    "improved": {
+    "bigram_svm": {
       "n_cases": 3728,
-      "overall_accuracy": 0.4665,
-      "hate_detected": 0.3484,
-      "hate_flagged_any": 0.6274,
-      "benign_wrongly_hate": 0.2738,
-      "benign_flagged_any": 0.6069,
+      "overall_accuracy": 0.3613,
+      "hate_detected": 0.1112,
+      "hate_flagged_any": 0.849,
+      "benign_wrongly_hate": 0.0884,
+      "benign_flagged_any": 0.812,
       "by_target": {
-        "Muslims": 0.3619,
-        "black people": 0.6162,
-        "disabled people": 0.311,
-        "gay people": 0.6702,
-        "immigrants": 0.1176,
-        "trans people": 0.1737,
-        "women": 0.1823
+        "Muslims": 0.0456,
+        "black people": 0.3894,
+        "disabled people": 0.0643,
+        "gay people": 0.1823,
+        "immigrants": 0.0196,
+        "trans people": 0.07,
+        "women": 0.0134
+      }
+    },
+    "first": {
+      "n_cases": 3728,
+      "overall_accuracy": 0.4606,
+      "hate_detected": 0.3375,
+      "hate_flagged_any": 0.6161,
+      "benign_wrongly_hate": 0.2687,
+      "benign_flagged_any": 0.6017,
+      "by_target": {
+        "Muslims": 0.3566,
+        "black people": 0.6106,
+        "disabled people": 0.2788,
+        "gay people": 0.6542,
+        "immigrants": 0.1064,
+        "trans people": 0.1709,
+        "women": 0.1796
+      }
+    },
+    "final": {
+      "n_cases": 3728,
+      "overall_accuracy": 0.3906,
+      "hate_detected": 0.1514,
+      "hate_flagged_any": 0.6801,
+      "benign_wrongly_hate": 0.0833,
+      "benign_flagged_any": 0.5785,
+      "by_target": {
+        "Muslims": 0.0643,
+        "black people": 0.3165,
+        "disabled people": 0.0322,
+        "gay people": 0.3164,
+        "immigrants": 0.0336,
+        "trans people": 0.2913,
+        "women": 0.0134
       }
     }
   },
@@ -351,13 +1088,29 @@
       "min_term": "taoist",
       "min_rate": 0.0
     },
-    "improved": {
-      "overall_false_flag_rate": 0.2083,
+    "bigram_svm": {
+      "overall_false_flag_rate": 0.5421,
+      "n_benign": 38282,
+      "max_term": "queer",
+      "max_rate": 0.9881,
+      "min_term": "asian",
+      "min_rate": 0.0013
+    },
+    "first": {
+      "overall_false_flag_rate": 0.2049,
       "n_benign": 38282,
       "max_term": "queer",
       "max_rate": 0.9987,
       "min_term": "middle eastern",
       "min_rate": 0.004
+    },
+    "final": {
+      "overall_false_flag_rate": 0.4974,
+      "n_benign": 38282,
+      "max_term": "queer",
+      "max_rate": 0.9855,
+      "min_term": "elderly",
+      "min_rate": 0.0383
     }
   },
   "dialect": {
@@ -386,29 +1139,53 @@
         "false_flag_ratio": 8.1045,
         "false_hate_ratio": 0.0
       },
-      "Improved model": {
+      "TF-IDF + balanced LR": {
         "aae": {
           "n": 4439,
           "gold_hate_share": 0.0403,
           "gold_offensive_share": 0.9394,
-          "pred_hate_share": 0.0351,
-          "false_hate_rate": 0.0279,
+          "pred_hate_share": 0.0372,
+          "false_hate_rate": 0.0296,
           "false_flag_rate": 0.3333,
           "n_neither": 90,
-          "hate_recall": 0.2067
+          "hate_recall": 0.2179
         },
         "white": {
           "n": 1087,
           "gold_hate_share": 0.0718,
           "gold_offensive_share": 0.2916,
           "pred_hate_share": 0.0846,
-          "false_hate_rate": 0.0505,
-          "false_flag_rate": 0.0289,
+          "false_hate_rate": 0.0515,
+          "false_flag_rate": 0.0246,
           "n_neither": 692,
-          "hate_recall": 0.5256
+          "hate_recall": 0.5128
         },
-        "false_flag_ratio": 11.5333,
-        "false_hate_ratio": 0.5527
+        "false_flag_ratio": 13.5686,
+        "false_hate_ratio": 0.5739
+      },
+      "Final model": {
+        "aae": {
+          "n": 4439,
+          "gold_hate_share": 0.0403,
+          "gold_offensive_share": 0.9394,
+          "pred_hate_share": 0.0347,
+          "false_hate_rate": 0.0286,
+          "false_flag_rate": 0.3667,
+          "n_neither": 90,
+          "hate_recall": 0.1788
+        },
+        "white": {
+          "n": 1087,
+          "gold_hate_share": 0.0718,
+          "gold_offensive_share": 0.2916,
+          "pred_hate_share": 0.0589,
+          "false_hate_rate": 0.0337,
+          "false_flag_rate": 0.0535,
+          "n_neither": 692,
+          "hate_recall": 0.3846
+        },
+        "false_flag_ratio": 6.8577,
+        "false_hate_ratio": 0.8499
       }
     },
     "threshold_0.5": {
@@ -436,29 +1213,53 @@
         "false_flag_ratio": 4.6428,
         "false_hate_ratio": 0.0
       },
-      "Improved model": {
+      "TF-IDF + balanced LR": {
         "aae": {
           "n": 7622,
           "gold_hate_share": 0.0417,
           "gold_offensive_share": 0.933,
-          "pred_hate_share": 0.0388,
-          "false_hate_rate": 0.0286,
-          "false_flag_rate": 0.2642,
+          "pred_hate_share": 0.0403,
+          "false_hate_rate": 0.0297,
+          "false_flag_rate": 0.2694,
           "n_neither": 193,
-          "hate_recall": 0.2736
+          "hate_recall": 0.283
         },
         "white": {
           "n": 2679,
           "gold_hate_share": 0.0847,
           "gold_offensive_share": 0.3725,
-          "pred_hate_share": 0.0933,
-          "false_hate_rate": 0.0538,
-          "false_flag_rate": 0.0351,
+          "pred_hate_share": 0.0941,
+          "false_hate_rate": 0.0555,
+          "false_flag_rate": 0.033,
           "n_neither": 1454,
-          "hate_recall": 0.5198
+          "hate_recall": 0.511
         },
-        "false_flag_ratio": 7.5337,
-        "false_hate_ratio": 0.5315
+        "false_flag_ratio": 8.1615,
+        "false_hate_ratio": 0.5356
+      },
+      "Final model": {
+        "aae": {
+          "n": 7622,
+          "gold_hate_share": 0.0417,
+          "gold_offensive_share": 0.933,
+          "pred_hate_share": 0.0362,
+          "false_hate_rate": 0.0274,
+          "false_flag_rate": 0.3005,
+          "n_neither": 193,
+          "hate_recall": 0.239
+        },
+        "white": {
+          "n": 2679,
+          "gold_hate_share": 0.0847,
+          "gold_offensive_share": 0.3725,
+          "pred_hate_share": 0.0661,
+          "false_hate_rate": 0.0351,
+          "false_flag_rate": 0.0591,
+          "n_neither": 1454,
+          "hate_recall": 0.4009
+        },
+        "false_flag_ratio": 5.0809,
+        "false_hate_ratio": 0.7807
       }
     },
     "by_aae_share": {
@@ -489,16 +1290,16 @@
           "false_flag_rate": 1.0
         }
       ],
-      "Improved model": [
+      "TF-IDF + balanced LR": [
         {
           "bin": "(-0.001, 0.2]",
           "n": 2463,
-          "false_flag_rate": 0.0447
+          "false_flag_rate": 0.0434
         },
         {
           "bin": "(0.2, 0.4]",
           "n": 1263,
-          "false_flag_rate": 0.0744
+          "false_flag_rate": 0.076
         },
         {
           "bin": "(0.4, 0.6]",
@@ -515,15 +1316,55 @@
           "n": 6,
           "false_flag_rate": 0.6667
         }
+      ],
+      "Final model": [
+        {
+          "bin": "(-0.001, 0.2]",
+          "n": 2463,
+          "false_flag_rate": 0.067
+        },
+        {
+          "bin": "(0.2, 0.4]",
+          "n": 1263,
+          "false_flag_rate": 0.1132
+        },
+        {
+          "bin": "(0.4, 0.6]",
+          "n": 346,
+          "false_flag_rate": 0.1936
+        },
+        {
+          "bin": "(0.6, 0.8]",
+          "n": 84,
+          "false_flag_rate": 0.3452
+        },
+        {
+          "bin": "(0.8, 1.0]",
+          "n": 6,
+          "false_flag_rate": 0.6667
+        }
       ]
     }
   },
   "policy_thresholds": {
-    "t_auto": null,
-    "t_review": 0.2395,
-    "target_precision": 0.8,
-    "best_precision": 0.7097,
-    "review_budget": 0.05
+    "review_5": {
+      "t_auto": null,
+      "t_review": 0.2265,
+      "t_nudge": 0.3431,
+      "target_precision": 0.8,
+      "best_hate_precision": 0.7619,
+      "review_budget": 0.05,
+      "nudge_precision": 0.95
+    },
+    "review_10": {
+      "t_auto": null,
+      "t_review": 0.1357,
+      "t_nudge": 0.3431,
+      "target_precision": 0.8,
+      "best_hate_precision": 0.7619,
+      "review_budget": 0.1,
+      "nudge_precision": 0.95
+    }
   },
   "policies": {
     "Original model, auto-remove": {
@@ -536,80 +1377,96 @@
       "nudged": 0.0,
       "auto_removed": 0.0022
     },
-    "Improved model, auto-remove": {
-      "hate_caught": 0.4825,
-      "wrongful_removals": 215,
-      "wrongful_removal_rate": 0.046,
+    "Final model, auto-remove": {
+      "hate_caught": 0.4056,
+      "wrongful_removals": 183,
+      "wrongful_removal_rate": 0.0392,
       "wrongful_rate_aae": 0.0255,
-      "wrongful_rate_white": 0.051,
+      "wrongful_rate_white": 0.0357,
       "review_load": 0.0,
       "nudged": 0.0,
-      "auto_removed": 0.0712
+      "auto_removed": 0.0603
     },
     "Remove anything flagged": {
-      "hate_caught": 0.8741,
-      "wrongful_removals": 3851,
-      "wrongful_removal_rate": 0.8244,
-      "wrongful_rate_aae": 0.9866,
-      "wrongful_rate_white": 0.2755,
+      "hate_caught": 0.8497,
+      "wrongful_removals": 3836,
+      "wrongful_removal_rate": 0.8212,
+      "wrongful_rate_aae": 0.9842,
+      "wrongful_rate_white": 0.2551,
       "review_load": 0.0,
       "nudged": 0.0,
-      "auto_removed": 0.8273
+      "auto_removed": 0.8229
     },
-    "Triage: 5% to human review + nudges": {
-      "hate_caught": 0.3741,
+    "Triage: 5% to human review": {
+      "hate_caught": 0.3566,
       "wrongful_removals": 0,
       "wrongful_removal_rate": 0.0,
       "wrongful_rate_aae": 0.0,
       "wrongful_rate_white": 0.0,
-      "review_load": 0.0525,
-      "nudged": 0.7767,
+      "review_load": 0.0559,
+      "nudged": 0.8029,
+      "auto_removed": 0.0
+    },
+    "Triage: 10% to human review": {
+      "hate_caught": 0.5559,
+      "wrongful_removals": 0,
+      "wrongful_removal_rate": 0.0,
+      "wrongful_rate_aae": 0.0,
+      "wrongful_rate_white": 0.0,
+      "review_load": 0.1116,
+      "nudged": 0.7509,
       "auto_removed": 0.0
     }
+  },
+  "policy_everyday_feed": {
+    "allow": 0.5919,
+    "nudge": 0.4081,
+    "review": 0.0,
+    "remove": 0.0
   },
   "review_budget_sweep": [
     {
       "review_budget": 0.01,
-      "hate_caught": 0.1049,
+      "hate_caught": 0.0909,
       "wrongful_removals": 0,
       "wrongful_removal_rate": 0.0,
       "wrongful_rate_aae": 0.0,
       "wrongful_rate_white": 0.0,
-      "review_load": 0.0089,
-      "nudged": 0.8166,
+      "review_load": 0.0091,
+      "nudged": 0.8449,
       "auto_removed": 0.0
     },
     {
       "review_budget": 0.02,
-      "hate_caught": 0.1469,
+      "hate_caught": 0.1713,
       "wrongful_removals": 0,
       "wrongful_removal_rate": 0.0,
       "wrongful_rate_aae": 0.0,
       "wrongful_rate_white": 0.0,
-      "review_load": 0.0173,
-      "nudged": 0.81,
+      "review_load": 0.019,
+      "nudged": 0.837,
       "auto_removed": 0.0
     },
     {
       "review_budget": 0.05,
-      "hate_caught": 0.3741,
+      "hate_caught": 0.3566,
       "wrongful_removals": 0,
       "wrongful_removal_rate": 0.0,
       "wrongful_rate_aae": 0.0,
       "wrongful_rate_white": 0.0,
-      "review_load": 0.0525,
-      "nudged": 0.7767,
+      "review_load": 0.0559,
+      "nudged": 0.8029,
       "auto_removed": 0.0
     },
     {
       "review_budget": 0.1,
-      "hate_caught": 0.5524,
+      "hate_caught": 0.5559,
       "wrongful_removals": 0,
       "wrongful_removal_rate": 0.0,
       "wrongful_rate_aae": 0.0,
       "wrongful_rate_white": 0.0,
-      "review_load": 0.1067,
-      "nudged": 0.7252,
+      "review_load": 0.1116,
+      "nudged": 0.7509,
       "auto_removed": 0.0
     },
     {
@@ -619,19 +1476,19 @@
       "wrongful_removal_rate": 0.0,
       "wrongful_rate_aae": 0.0,
       "wrongful_rate_white": 0.0,
-      "review_load": 0.1578,
-      "nudged": 0.677,
+      "review_load": 0.164,
+      "nudged": 0.7018,
       "auto_removed": 0.0
     },
     {
       "review_budget": 0.2,
-      "hate_caught": 0.7028,
+      "hate_caught": 0.7133,
       "wrongful_removals": 0,
       "wrongful_removal_rate": 0.0,
       "wrongful_rate_aae": 0.0,
       "wrongful_rate_white": 0.0,
-      "review_load": 0.2098,
-      "nudged": 0.6282,
+      "review_load": 0.2163,
+      "nudged": 0.6524,
       "auto_removed": 0.0
     }
   ]
