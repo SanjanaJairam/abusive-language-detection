@@ -18,6 +18,8 @@ MADLIBS_CSV = DATA / "unintended-ml-bias-analysis" / "bias_madlibs_77k.csv"
 IDENTITY_TERMS = DATA / "unintended-ml-bias-analysis" / "identity_terms.txt"
 TWITTERAAE_DIR = DATA / "twitteraae" / "model"
 GLOVE_GZ = DATA / "glove-twitter-25.gz"
+OLID_DIR = DATA / "tweeteval" / "offensive"
+HATE_LEXICON = DATA / "hate-speech-and-offensive-language" / "lexicons" / "refined_ngram_dict.csv"
 
 for _d in (RESULTS, FIGURES):
     _d.mkdir(exist_ok=True)

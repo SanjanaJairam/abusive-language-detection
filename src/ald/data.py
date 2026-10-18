@@ -2,7 +2,7 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
-from .config import DAVIDSON_CSV, HATECHECK_CSV, MADLIBS_CSV, SEED
+from .config import DAVIDSON_CSV, HATECHECK_CSV, MADLIBS_CSV, NEITHER, OFFENSIVE, OLID_DIR, SEED
 
 
 def load_davidson():
@@ -33,3 +33,15 @@ def load_hatecheck():
 def load_madlibs():
     """Dixon et al. (2018): 76,564 templated sentences with identity terms, labelled BAD / NOT_BAD."""
     return pd.read_csv(MADLIBS_CSV)
+
+
+def load_olid(split_name):
+    """OLID (Zampieri et al., 2019), as distributed in TweetEval (Barbieri et al., 2020).
+
+    Labels are offensive / not offensive. Mapped onto Davidson's scheme as offensive (1) and
+    neither (2). OLID's offensive tweets include some targeted at groups, so this mapping is a
+    simplification; OLID is used mainly for its human-labelled *ordinary* tweets.
+    """
+    text = (OLID_DIR / f"{split_name}_text.txt").read_text(encoding="utf8").splitlines()
+    labels = [int(x) for x in (OLID_DIR / f"{split_name}_labels.txt").read_text().split()]
+    return pd.DataFrame({"tweet": text, "label": [OFFENSIVE if y == 1 else NEITHER for y in labels]})

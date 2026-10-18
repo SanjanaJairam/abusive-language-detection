@@ -34,10 +34,51 @@ def clean_text(tweet):
     Decodes HTML entities (the raw tweets contain &amp; and &#8220;), removes the
     retweet marker, and shortens long character runs ("soooooo" -> "sooo").
     """
-    t = html.unescape(tweet)
+    t = html.unescape(tweet).replace("\u2019", "'").replace("\u2018", "'")
     t = _RT.sub("", t)
     t = _URL.sub(" URL ", t)
     t = _MENTION.sub(" @USER ", t)
     t = t.replace("#", " ")
     t = _REPEAT.sub(r"\1\1\1", t)
     return re.sub(r"\s+", " ", t).strip().lower()
+
+
+# ---------- Negation marking ----------
+# Words after a negation, up to the next punctuation mark, get a "neg_" prefix, so the model
+# sees "don't hate women" as different from "hate women" (Das & Chen, 2001; Pang, Lee &
+# Vaithyanathan, 2002). Plain bigrams aren't enough: in the first model the unigram "hate"
+# outweighed the bigram "don't hate".
+NEGATIONS = {"not", "no", "never", "nobody", "nothing", "nowhere", "neither", "nor", "cannot", "without"}
+# Tokens of 2+ characters, matching scikit-learn's default token pattern, so that adding negation
+# marking changes nothing else about the features. Punctuation is kept only to end a negated clause.
+_WORD = re.compile(r"[a-z0-9@_'][a-z0-9@_']+|[.,!?;:]")
+_CLAUSE_END = {".", ",", "!", "?", ";", ":"}
+
+
+def is_negation(token):
+    return token in NEGATIONS or token.endswith("n't") or token in {"dont", "doesnt", "didnt", "isnt", "arent",
+                                                                    "wasnt", "werent", "cant", "wont", "aint"}
+
+
+def negation_tokens(text):
+    """Tokens of already-cleaned text, with words in a negated clause prefixed by 'neg_'."""
+    out, negated = [], False
+    for tok in _WORD.findall(text):
+        if tok in _CLAUSE_END:
+            negated = False
+            continue
+        if is_negation(tok):
+            out.append(tok)
+            negated = True
+        else:
+            out.append("neg_" + tok if negated else tok)
+    return out
+
+
+def word_ngrams(text, n_max=2):
+    """Unigrams and bigrams over negation-marked tokens (used as a TF-IDF analyzer)."""
+    toks = negation_tokens(text)
+    grams = list(toks)
+    for n in range(2, n_max + 1):
+        grams += [" ".join(toks[i:i + n]) for i in range(len(toks) - n + 1)]
+    return grams

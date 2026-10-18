@@ -181,3 +181,29 @@ def wrongful_by_dialect(results):
     ax.legend(frameon=False, fontsize=9)
     ax.set_title("Who bears the cost of each policy")
     _save(fig, "policy_by_dialect.png")
+
+
+CHECK_COLUMNS = [
+    ("Everyday tweets\nnot flagged", lambda c: c["everyday_speech"]["olid_pass_rate"]),
+    ("Everyday examples\nnot flagged", lambda c: c["everyday_speech"]["examples_pass_rate"]),
+    ("'I don't hate X'\nnot called hate", lambda c: c["negation"]["not_called_hate_pass_rate"]),
+    ("Negation lowers\nhate score", lambda c: c["negation"]["score_drops_pass_rate"]),
+    ("Same label for\nevery group", lambda c: c["identity_swap"]["consistent_pass_rate"]),
+    ("Counter-speech\nnot called hate", lambda c: c["counter_speech"]["not_called_hate_pass_rate"]),
+]
+
+
+def checks(rows):
+    """rows: [(model name, checks dict)] -> grid of pass rates."""
+    grid = np.array([[f(c) for _, f in CHECK_COLUMNS] for _, c in rows])
+    fig, ax = plt.subplots(figsize=(11, .55 * len(rows) + 1.6))
+    ax.imshow(grid, cmap="RdYlGn", vmin=0, vmax=1, aspect="auto")
+    ax.grid(False)
+    for i in range(grid.shape[0]):
+        for j in range(grid.shape[1]):
+            ax.text(j, i, f"{grid[i, j]:.0%}", ha="center", va="center", fontsize=10, color=INK)
+    ax.set_xticks(range(len(CHECK_COLUMNS)), [c for c, _ in CHECK_COLUMNS], fontsize=9)
+    ax.set_yticks(range(len(rows)), [n for n, _ in rows], fontsize=10)
+    ax.xaxis.tick_top()
+    ax.set_title("Behavioural checks: share of cases passed (higher is better)", pad=42)
+    _save(fig, "behavioural_checks.png")
