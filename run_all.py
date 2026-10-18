@@ -50,7 +50,7 @@ def main():
                    "class_counts": df.label.value_counts().sort_index().rename(dict(enumerate(CLASSES))).to_dict()}
     log(f"Davidson et al. 2017: {len(df)} tweets; train {len(train)}, val {len(val)}, test {len(test)}")
 
-    # ---------- 1. Reproduce the original notebook ----------
+    # ---------- 1. Reproduce the original model ----------
     log("Embedding tweets with GloVe Twitter-25 (original preprocessing)")
     def glove_X(texts):
         return glove.embed([original_tokens(t) for t in texts])

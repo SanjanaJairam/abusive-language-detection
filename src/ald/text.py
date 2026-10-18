@@ -1,6 +1,6 @@
 """Text preprocessing.
 
-`original_tokens` reproduces the 2023 Kaggle notebook as closely as possible.
+`original_tokens` reproduces the original project's preprocessing as closely as possible.
 `clean_text` is the improved version used by the new model.
 """
 import html
@@ -9,7 +9,7 @@ import string
 
 from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
 
-# The original notebook used a Kaggle English stopword list that, like scikit-learn's,
+# The original project used an English stopword list that, like scikit-learn's,
 # includes negations ("not", "no", "never"). scikit-learn's list stands in for it here.
 STOPWORDS = set(ENGLISH_STOP_WORDS)
 _PUNCT = str.maketrans("", "", string.punctuation)

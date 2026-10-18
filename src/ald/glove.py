@@ -1,4 +1,4 @@
-"""GloVe Twitter embeddings (Pennington et al., 2014), 25 dimensions, averaged per tweet as in the original notebook."""
+"""GloVe Twitter embeddings (Pennington et al., 2014), 25 dimensions, averaged per tweet as in the original project."""
 import gzip
 
 import numpy as np

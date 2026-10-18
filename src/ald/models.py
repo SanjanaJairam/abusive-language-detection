@@ -1,4 +1,4 @@
-"""Models: the original notebook's line-up, and the improved calibrated classifier."""
+"""Models: the original project's line-up, and the improved calibrated classifier."""
 from sklearn.calibration import CalibratedClassifierCV
 from sklearn.ensemble import AdaBoostClassifier, HistGradientBoostingClassifier, RandomForestClassifier
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -9,7 +9,7 @@ from sklearn.svm import SVC
 
 from .config import SEED
 
-try:  # The original notebook used XGBoost; fall back to scikit-learn's equivalent if it isn't installed.
+try:  # The original project used XGBoost; fall back to scikit-learn's equivalent if it isn't installed.
     from xgboost import XGBClassifier
     def _boosting():
         return "XGBoost", XGBClassifier(random_state=SEED)
@@ -19,7 +19,7 @@ except ImportError:
 
 
 def original_models():
-    """The supervised models from the notebook, on averaged GloVe-25 features, same settings."""
+    """The supervised models from the original project, on averaged GloVe-25 features, same settings."""
     boost_name, boost = _boosting()
     return {
         "SVM (rbf, C=10, tuned)": SVC(C=10, kernel="rbf", random_state=SEED),

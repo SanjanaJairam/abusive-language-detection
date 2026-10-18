@@ -8,7 +8,7 @@
 
 Automated moderation is usually judged by accuracy. This project asks a different question: **when a hate-speech classifier fails, who pays for it?**
 
-I rebuilt an earlier class project, a tweet classifier with 86% accuracy, and audited it the way a safety team would. Three findings stand out:
+I took a tweet classifier with 86% accuracy and audited it the way a safety team would. This builds on an earlier course project of mine, rebuilt and extended. Three findings stand out:
 
 1. **Accuracy hid the failure.** The original model caught **2% of hate speech** (6 of 286 hateful test tweets). Its accuracy looked good only because most tweets were "offensive", which it labelled well.
 2. **Harmless posts in African American English were flagged far more often.** Annotators labelled 94% of AAE-aligned tweets as offensive, compared with 29% of White-aligned tweets. Models trained on those labels then flagged harmless AAE-aligned tweets **8 to 12 times more often** than harmless White-aligned ones.
@@ -16,9 +16,9 @@ I rebuilt an earlier class project, a tweet classifier with 86% accuracy, and au
 
 ## Why this matters
 
-In 2021, leaked internal documents ("the Facebook Files", dramatised in the 2026 film *The Social Reckoning*) showed that Facebook's automated systems removed posts accounting for only **3–5% of hate-speech views**, while the company had cut the time human reviewers spent on hate-speech complaints ([WSJ via Fox Business](https://foxbusiness.com/technology/facebook-ai-will-clean-up-the-platform-engineers-doubt)). Other documents showed that a "race-blind" enforcement approach left minority users more exposed to hate ([Washington Post via Election Law Blog](https://electionlawblog.org/2021/facebooks-race-blind-practices-around-hate-speech-came-at-the-expense-of-black-users-new-documents-show/)), and that 5.8 million VIP accounts were exempt from normal enforcement ([CNBC](https://www.cnbc.com/2021/09/13/facebook-shields-millions-of-vip-users-from-moderation-protocols.html)).
+Online platforms increasingly rely on automated classifiers to moderate hate speech at scale, often with limited human review. When these systems fail, the costs fall unevenly. Hateful posts stay up, while some communities' ordinary speech is removed more often than others' (Sap et al., 2019; Davidson, Bhattacharya & Weber, 2019).
 
-This project reproduces those dynamics at small scale with public data, and tests design choices that could reduce them.
+This project examines both kinds of failure in a small, reproducible setting with public data, and tests design choices that could reduce them.
 
 ## Research questions
 
@@ -37,7 +37,7 @@ This project reproduces those dynamics at small scale with public data, and test
 | GloVe Twitter embeddings (25d) | Features for the original model | Pennington, Socher & Manning, 2014 |
 
 **Models.**
-- **Original:** a faithful reproduction of my 2023 notebook, using averaged GloVe vectors with an SVM (rbf, C = 10) and the same comparison models.
+- **Original:** the earlier project's classifier, reproduced: averaged GloVe vectors with an SVM (rbf, C = 10), plus random forest, gradient boosting and AdaBoost for comparison.
 - **Improved:** a model following Davidson et al.'s design, with TF-IDF word and character n-grams and class-balanced logistic regression. Its probabilities are calibrated on the validation set.
 
 **Dialect audit.** It follows Davidson, Bhattacharya & Weber (2019) and Sap et al. (2019). It uses 5-fold cross-validated predictions on all tweets, because the test split alone is too small for each group. A tweet counts as AAE- or White-aligned when more than 60% of its language is estimated to come from that dialect. The original papers used 80%, which leaves only 18 White-aligned tweets in this dataset; the results hold at 50% and across the continuous estimate. This measures **language**, not the author's race.
@@ -56,7 +56,7 @@ This project reproduces those dynamics at small scale with public data, and test
 
 ![Recall for each class](figures/per_class_recall.png)
 
-The original model labelled 85% of hate tweets as merely "offensive" ([confusion matrices](figures/confusion_matrices.png)). Weighted averages, which the original notebook reported, are dominated by the large "offensive" class (77% of tweets), so they never showed this.
+The original model labelled 85% of hate tweets as merely "offensive" ([confusion matrices](figures/confusion_matrices.png)). Weighted averages, which the original project reported, are dominated by the large "offensive" class (77% of tweets), so they never showed this.
 
 ### 2. A better model shifts the errors rather than removing them
 
@@ -86,7 +86,7 @@ The improved model flags far fewer harmless tweets overall, but the gap between 
 | Policy (same data) | Hate caught | Harmless posts removed | Sent to a human |
 | --- | --- | --- | --- |
 | Original model, auto-remove | 2% | 5 | 0% |
-| Improved model, auto-remove (Facebook-style) | 48% | 215 | 0% |
+| Improved model, auto-remove | 48% | 215 | 0% |
 | Remove anything flagged | 87% | 3,851 (99% of AAE-aligned harmless posts) | 0% |
 | **Triage: riskiest 5% to a human, nudge authors of offensive posts** | 37% | **0** | 5% |
 | **Triage with 10% to a human** | **55%** | **0** | 11% |
@@ -104,7 +104,7 @@ Based on these results:
 2. **Treat "offensive" and "harmful" differently.** Profanity and slang are not hate. Ask the author to reconsider, rather than removing the post.
 3. **Protect counter-speech and reclaimed language.** Quotes, reporting and in-group language should go to a reviewer, not to automatic removal.
 4. **Audit error rates by group before deployment and after every update.** The dialect gap here *grew* when overall accuracy improved.
-5. **Apply the same rules to everyone.** Systems like XCheck that exempt powerful accounts undo the fairness of everything above.
+5. **Apply the same rules to everyone.** Exempting high-profile accounts from enforcement undoes the fairness of everything above.
 6. **Explain decisions and offer appeals.** People wrongly flagged need a way to be heard.
 
 ## Limitations
@@ -128,16 +128,9 @@ src/ald/       data, preprocessing, models, audits, dialect model, policies, plo
 run_all.py     runs every experiment in this README
 results/       all numbers (results.json) and per-item tables (CSV)
 figures/       charts used above
-notebooks/     the original 2023 Kaggle notebook, kept for reference
+notebooks/     the earlier course project's notebook, for reference
 docs/          newer datasets to extend this work, and how to credit them
 ```
-
-## Origins
-
-This started as a 2023 class project ([notebook](notebooks/original_kaggle_notebook.ipynb)) comparing topic models, clustering and classifiers on tweets. The rebuild fixes its evaluation and turns it into a safety audit:
-- **Fixed the evaluation:** a seeded split, per-class metrics, and a repaired final test that previously crashed.
-- **Dropped meaningless baselines:** the unsupervised results whose clusters were never matched to labels.
-- **Stopped removing negations** like "not" during preprocessing.
 
 ## References
 
@@ -148,7 +141,6 @@ This started as a 2023 class project ([notebook](notebooks/original_kaggle_noteb
 - Dixon, L., Li, J., Sorensen, J., Thain, N., & Vasserman, L. (2018). Measuring and mitigating unintended bias in text classification. *AIES*. Data: Apache 2.0.
 - Blodgett, S. L., Green, L., & O'Connor, B. (2016). Demographic dialectal variation in social media: A case study of African-American English. *EMNLP*. Model and code: MIT License; `src/ald/dialect.py` is adapted from it.
 - Pennington, J., Socher, R., & Manning, C. D. (2014). GloVe: Global vectors for word representation. *EMNLP*.
-- Horwitz, J., Seetharaman, D., et al. (2021). The Facebook Files. *The Wall Street Journal*.
 
 ## License
 

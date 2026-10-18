@@ -1,10 +1,8 @@
 """Moderation policies built on the same classifier, compared on what they do to people.
 
-The Facebook Files (Wall Street Journal, 2021) reported that Facebook relied increasingly on
-automated removal while cutting human review time, and that its systems removed posts
-accounting for only 3-5% of hate-speech views. The question here is not "which model is
-best" but "given an imperfect model, which *policy* catches the most hate while wrongly
-silencing the fewest people, and does the burden fall equally?"
+The question here is not "which model is best" but "given an imperfect model, which
+*policy* catches the most hate while wrongly silencing the fewest people, and does the
+burden fall equally?"
 
 Assumption (stated in the README): human reviewers reach the gold label. This is
 optimistic; annotator bias is part of the dialect problem (Sap et al., 2019).
@@ -39,7 +37,7 @@ def choose_thresholds(p_hate_val, y_val, target_precision=0.80, review_budget=0.
 
 
 def remove_predicted_hate(pred):
-    """Facebook-style: remove whatever the model labels hate, with no human in the loop."""
+    """Auto-remove: delete whatever the model labels hate, with no human in the loop."""
     pred = np.asarray(pred)
     return np.where(pred == HATE, REMOVE, ALLOW).astype(object)
 
