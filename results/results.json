@@ -1,0 +1,638 @@
+{
+  "data": {
+    "n_total": 24783,
+    "n_train": 14869,
+    "n_val": 4957,
+    "n_test": 4957,
+    "class_counts": {
+      "hate": 1430,
+      "offensive": 19190,
+      "neither": 4163
+    }
+  },
+  "original": {
+    "SVM (rbf, C=10, tuned)": {
+      "accuracy": 0.8592,
+      "weighted_f1": 0.8325,
+      "macro_f1": 0.5558,
+      "per_class": {
+        "hate": {
+          "precision": 0.5455,
+          "recall": 0.021,
+          "f1": 0.0404,
+          "support": 286
+        },
+        "offensive": {
+          "precision": 0.8762,
+          "recall": 0.9646,
+          "f1": 0.9183,
+          "support": 3839
+        },
+        "neither": {
+          "precision": 0.7639,
+          "recall": 0.6611,
+          "f1": 0.7088,
+          "support": 832
+        }
+      },
+      "confusion_matrix": [
+        [
+          6,
+          244,
+          36
+        ],
+        [
+          2,
+          3703,
+          134
+        ],
+        [
+          3,
+          279,
+          550
+        ]
+      ]
+    },
+    "SVM (default)": {
+      "accuracy": 0.8566,
+      "weighted_f1": 0.8277,
+      "macro_f1": 0.5404,
+      "per_class": {
+        "hate": {
+          "precision": 1.0,
+          "recall": 0.0035,
+          "f1": 0.007,
+          "support": 286
+        },
+        "offensive": {
+          "precision": 0.8735,
+          "recall": 0.9656,
+          "f1": 0.9172,
+          "support": 3839
+        },
+        "neither": {
+          "precision": 0.7556,
+          "recall": 0.6466,
+          "f1": 0.6969,
+          "support": 832
+        }
+      },
+      "confusion_matrix": [
+        [
+          1,
+          243,
+          42
+        ],
+        [
+          0,
+          3707,
+          132
+        ],
+        [
+          0,
+          294,
+          538
+        ]
+      ]
+    },
+    "Random forest (depth 2)": {
+      "accuracy": 0.8136,
+      "weighted_f1": 0.7603,
+      "macro_f1": 0.434,
+      "per_class": {
+        "hate": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 286
+        },
+        "offensive": {
+          "precision": 0.8123,
+          "recall": 0.9919,
+          "f1": 0.8932,
+          "support": 3839
+        },
+        "neither": {
+          "precision": 0.8364,
+          "recall": 0.2704,
+          "f1": 0.4087,
+          "support": 832
+        }
+      },
+      "confusion_matrix": [
+        [
+          0,
+          273,
+          13
+        ],
+        [
+          0,
+          3808,
+          31
+        ],
+        [
+          0,
+          607,
+          225
+        ]
+      ]
+    },
+    "Gradient boosting (sklearn; XGBoost unavailable)": {
+      "accuracy": 0.8545,
+      "weighted_f1": 0.8329,
+      "macro_f1": 0.5704,
+      "per_class": {
+        "hate": {
+          "precision": 0.3659,
+          "recall": 0.0524,
+          "f1": 0.0917,
+          "support": 286
+        },
+        "offensive": {
+          "precision": 0.8825,
+          "recall": 0.9526,
+          "f1": 0.9162,
+          "support": 3839
+        },
+        "neither": {
+          "precision": 0.7306,
+          "recall": 0.6779,
+          "f1": 0.7032,
+          "support": 832
+        }
+      },
+      "confusion_matrix": [
+        [
+          15,
+          228,
+          43
+        ],
+        [
+          17,
+          3657,
+          165
+        ],
+        [
+          9,
+          259,
+          564
+        ]
+      ]
+    },
+    "AdaBoost (2 estimators)": {
+      "accuracy": 0.8186,
+      "weighted_f1": 0.7899,
+      "macro_f1": 0.493,
+      "per_class": {
+        "hate": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 286
+        },
+        "offensive": {
+          "precision": 0.8522,
+          "recall": 0.9375,
+          "f1": 0.8928,
+          "support": 3839
+        },
+        "neither": {
+          "precision": 0.6253,
+          "recall": 0.5517,
+          "f1": 0.5862,
+          "support": 832
+        }
+      },
+      "confusion_matrix": [
+        [
+          0,
+          251,
+          35
+        ],
+        [
+          0,
+          3599,
+          240
+        ],
+        [
+          0,
+          373,
+          459
+        ]
+      ]
+    }
+  },
+  "balanced_glove_svm": {
+    "accuracy": 0.7186,
+    "weighted_f1": 0.7616,
+    "macro_f1": 0.5813,
+    "per_class": {
+      "hate": {
+        "precision": 0.1526,
+        "recall": 0.5175,
+        "f1": 0.2357,
+        "support": 286
+      },
+      "offensive": {
+        "precision": 0.9454,
+        "recall": 0.7174,
+        "f1": 0.8158,
+        "support": 3839
+      },
+      "neither": {
+        "precision": 0.6145,
+        "recall": 0.7933,
+        "f1": 0.6925,
+        "support": 832
+      }
+    },
+    "confusion_matrix": [
+      [
+        148,
+        87,
+        51
+      ],
+      [
+        722,
+        2754,
+        363
+      ],
+      [
+        100,
+        72,
+        660
+      ]
+    ]
+  },
+  "improved": {
+    "accuracy": 0.885,
+    "weighted_f1": 0.8894,
+    "macro_f1": 0.7389,
+    "per_class": {
+      "hate": {
+        "precision": 0.3909,
+        "recall": 0.4825,
+        "f1": 0.4319,
+        "support": 286
+      },
+      "offensive": {
+        "precision": 0.9558,
+        "recall": 0.9078,
+        "f1": 0.9312,
+        "support": 3839
+      },
+      "neither": {
+        "precision": 0.7975,
+        "recall": 0.9183,
+        "f1": 0.8536,
+        "support": 832
+      }
+    },
+    "confusion_matrix": [
+      [
+        138,
+        109,
+        39
+      ],
+      [
+        199,
+        3485,
+        155
+      ],
+      [
+        16,
+        52,
+        764
+      ]
+    ]
+  },
+  "hatecheck": {
+    "original": {
+      "n_cases": 3728,
+      "overall_accuracy": 0.327,
+      "hate_detected": 0.0285,
+      "hate_flagged_any": 0.7085,
+      "benign_wrongly_hate": 0.0163,
+      "benign_flagged_any": 0.6609,
+      "by_target": {
+        "Muslims": 0.0912,
+        "black people": 0.0028,
+        "disabled people": 0.0027,
+        "gay people": 0.0027,
+        "immigrants": 0.0812,
+        "trans people": 0.0,
+        "women": 0.0188
+      }
+    },
+    "improved": {
+      "n_cases": 3728,
+      "overall_accuracy": 0.4665,
+      "hate_detected": 0.3484,
+      "hate_flagged_any": 0.6274,
+      "benign_wrongly_hate": 0.2738,
+      "benign_flagged_any": 0.6069,
+      "by_target": {
+        "Muslims": 0.3619,
+        "black people": 0.6162,
+        "disabled people": 0.311,
+        "gay people": 0.6702,
+        "immigrants": 0.1176,
+        "trans people": 0.1737,
+        "women": 0.1823
+      }
+    }
+  },
+  "identity_terms": {
+    "original": {
+      "overall_false_flag_rate": 0.1743,
+      "n_benign": 38282,
+      "max_term": "bisexual",
+      "max_rate": 0.8745,
+      "min_term": "taoist",
+      "min_rate": 0.0
+    },
+    "improved": {
+      "overall_false_flag_rate": 0.2083,
+      "n_benign": 38282,
+      "max_term": "queer",
+      "max_rate": 0.9987,
+      "min_term": "middle eastern",
+      "min_rate": 0.004
+    }
+  },
+  "dialect": {
+    "threshold_0.6": {
+      "Original SVM": {
+        "aae": {
+          "n": 4439,
+          "gold_hate_share": 0.0403,
+          "gold_offensive_share": 0.9394,
+          "pred_hate_share": 0.0,
+          "false_hate_rate": 0.0,
+          "false_flag_rate": 0.8667,
+          "n_neither": 90,
+          "hate_recall": 0.0
+        },
+        "white": {
+          "n": 1087,
+          "gold_hate_share": 0.0718,
+          "gold_offensive_share": 0.2916,
+          "pred_hate_share": 0.0028,
+          "false_hate_rate": 0.002,
+          "false_flag_rate": 0.1069,
+          "n_neither": 692,
+          "hate_recall": 0.0128
+        },
+        "false_flag_ratio": 8.1045,
+        "false_hate_ratio": 0.0
+      },
+      "Improved model": {
+        "aae": {
+          "n": 4439,
+          "gold_hate_share": 0.0403,
+          "gold_offensive_share": 0.9394,
+          "pred_hate_share": 0.0351,
+          "false_hate_rate": 0.0279,
+          "false_flag_rate": 0.3333,
+          "n_neither": 90,
+          "hate_recall": 0.2067
+        },
+        "white": {
+          "n": 1087,
+          "gold_hate_share": 0.0718,
+          "gold_offensive_share": 0.2916,
+          "pred_hate_share": 0.0846,
+          "false_hate_rate": 0.0505,
+          "false_flag_rate": 0.0289,
+          "n_neither": 692,
+          "hate_recall": 0.5256
+        },
+        "false_flag_ratio": 11.5333,
+        "false_hate_ratio": 0.5527
+      }
+    },
+    "threshold_0.5": {
+      "Original SVM": {
+        "aae": {
+          "n": 7622,
+          "gold_hate_share": 0.0417,
+          "gold_offensive_share": 0.933,
+          "pred_hate_share": 0.0,
+          "false_hate_rate": 0.0,
+          "false_flag_rate": 0.8238,
+          "n_neither": 193,
+          "hate_recall": 0.0
+        },
+        "white": {
+          "n": 2679,
+          "gold_hate_share": 0.0847,
+          "gold_offensive_share": 0.3725,
+          "pred_hate_share": 0.0026,
+          "false_hate_rate": 0.0008,
+          "false_flag_rate": 0.1774,
+          "n_neither": 1454,
+          "hate_recall": 0.022
+        },
+        "false_flag_ratio": 4.6428,
+        "false_hate_ratio": 0.0
+      },
+      "Improved model": {
+        "aae": {
+          "n": 7622,
+          "gold_hate_share": 0.0417,
+          "gold_offensive_share": 0.933,
+          "pred_hate_share": 0.0388,
+          "false_hate_rate": 0.0286,
+          "false_flag_rate": 0.2642,
+          "n_neither": 193,
+          "hate_recall": 0.2736
+        },
+        "white": {
+          "n": 2679,
+          "gold_hate_share": 0.0847,
+          "gold_offensive_share": 0.3725,
+          "pred_hate_share": 0.0933,
+          "false_hate_rate": 0.0538,
+          "false_flag_rate": 0.0351,
+          "n_neither": 1454,
+          "hate_recall": 0.5198
+        },
+        "false_flag_ratio": 7.5337,
+        "false_hate_ratio": 0.5315
+      }
+    },
+    "by_aae_share": {
+      "Original SVM": [
+        {
+          "bin": "(-0.001, 0.2]",
+          "n": 2463,
+          "false_flag_rate": 0.1981
+        },
+        {
+          "bin": "(0.2, 0.4]",
+          "n": 1263,
+          "false_flag_rate": 0.4584
+        },
+        {
+          "bin": "(0.4, 0.6]",
+          "n": 346,
+          "false_flag_rate": 0.7139
+        },
+        {
+          "bin": "(0.6, 0.8]",
+          "n": 84,
+          "false_flag_rate": 0.8571
+        },
+        {
+          "bin": "(0.8, 1.0]",
+          "n": 6,
+          "false_flag_rate": 1.0
+        }
+      ],
+      "Improved model": [
+        {
+          "bin": "(-0.001, 0.2]",
+          "n": 2463,
+          "false_flag_rate": 0.0447
+        },
+        {
+          "bin": "(0.2, 0.4]",
+          "n": 1263,
+          "false_flag_rate": 0.0744
+        },
+        {
+          "bin": "(0.4, 0.6]",
+          "n": 346,
+          "false_flag_rate": 0.1647
+        },
+        {
+          "bin": "(0.6, 0.8]",
+          "n": 84,
+          "false_flag_rate": 0.3095
+        },
+        {
+          "bin": "(0.8, 1.0]",
+          "n": 6,
+          "false_flag_rate": 0.6667
+        }
+      ]
+    }
+  },
+  "policy_thresholds": {
+    "t_auto": null,
+    "t_review": 0.2395,
+    "target_precision": 0.8,
+    "best_precision": 0.7097,
+    "review_budget": 0.05
+  },
+  "policies": {
+    "Original model, auto-remove": {
+      "hate_caught": 0.021,
+      "wrongful_removals": 5,
+      "wrongful_removal_rate": 0.0011,
+      "wrongful_rate_aae": 0.0,
+      "wrongful_rate_white": 0.0,
+      "review_load": 0.0,
+      "nudged": 0.0,
+      "auto_removed": 0.0022
+    },
+    "Improved model, auto-remove": {
+      "hate_caught": 0.4825,
+      "wrongful_removals": 215,
+      "wrongful_removal_rate": 0.046,
+      "wrongful_rate_aae": 0.0255,
+      "wrongful_rate_white": 0.051,
+      "review_load": 0.0,
+      "nudged": 0.0,
+      "auto_removed": 0.0712
+    },
+    "Remove anything flagged": {
+      "hate_caught": 0.8741,
+      "wrongful_removals": 3851,
+      "wrongful_removal_rate": 0.8244,
+      "wrongful_rate_aae": 0.9866,
+      "wrongful_rate_white": 0.2755,
+      "review_load": 0.0,
+      "nudged": 0.0,
+      "auto_removed": 0.8273
+    },
+    "Triage: 5% to human review + nudges": {
+      "hate_caught": 0.3741,
+      "wrongful_removals": 0,
+      "wrongful_removal_rate": 0.0,
+      "wrongful_rate_aae": 0.0,
+      "wrongful_rate_white": 0.0,
+      "review_load": 0.0525,
+      "nudged": 0.7767,
+      "auto_removed": 0.0
+    }
+  },
+  "review_budget_sweep": [
+    {
+      "review_budget": 0.01,
+      "hate_caught": 0.1049,
+      "wrongful_removals": 0,
+      "wrongful_removal_rate": 0.0,
+      "wrongful_rate_aae": 0.0,
+      "wrongful_rate_white": 0.0,
+      "review_load": 0.0089,
+      "nudged": 0.8166,
+      "auto_removed": 0.0
+    },
+    {
+      "review_budget": 0.02,
+      "hate_caught": 0.1469,
+      "wrongful_removals": 0,
+      "wrongful_removal_rate": 0.0,
+      "wrongful_rate_aae": 0.0,
+      "wrongful_rate_white": 0.0,
+      "review_load": 0.0173,
+      "nudged": 0.81,
+      "auto_removed": 0.0
+    },
+    {
+      "review_budget": 0.05,
+      "hate_caught": 0.3741,
+      "wrongful_removals": 0,
+      "wrongful_removal_rate": 0.0,
+      "wrongful_rate_aae": 0.0,
+      "wrongful_rate_white": 0.0,
+      "review_load": 0.0525,
+      "nudged": 0.7767,
+      "auto_removed": 0.0
+    },
+    {
+      "review_budget": 0.1,
+      "hate_caught": 0.5524,
+      "wrongful_removals": 0,
+      "wrongful_removal_rate": 0.0,
+      "wrongful_rate_aae": 0.0,
+      "wrongful_rate_white": 0.0,
+      "review_load": 0.1067,
+      "nudged": 0.7252,
+      "auto_removed": 0.0
+    },
+    {
+      "review_budget": 0.15,
+      "hate_caught": 0.6538,
+      "wrongful_removals": 0,
+      "wrongful_removal_rate": 0.0,
+      "wrongful_rate_aae": 0.0,
+      "wrongful_rate_white": 0.0,
+      "review_load": 0.1578,
+      "nudged": 0.677,
+      "auto_removed": 0.0
+    },
+    {
+      "review_budget": 0.2,
+      "hate_caught": 0.7028,
+      "wrongful_removals": 0,
+      "wrongful_removal_rate": 0.0,
+      "wrongful_rate_aae": 0.0,
+      "wrongful_rate_white": 0.0,
+      "review_load": 0.2098,
+      "nudged": 0.6282,
+      "auto_removed": 0.0
+    }
+  ]
+}
