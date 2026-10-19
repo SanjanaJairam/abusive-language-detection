@@ -1,7 +1,7 @@
 """Reproduce every number and figure in the README.
 
     bash get_data.sh      # once: downloads the public datasets into data/
-    python run_all.py     # about 15 minutes on a laptop
+    python run_all.py     # about 10-15 minutes on a laptop
 
 Results go to results/ (JSON and CSV) and figures/ (PNG).
 """
@@ -11,15 +11,14 @@ import time
 from pathlib import Path
 
 import numpy as np
-import pandas as pd
 from sklearn.model_selection import StratifiedKFold, cross_val_predict
 
 sys.path.insert(0, str(Path(__file__).parent / "src"))
 from ald import audits, checks, data, dialect, explain, glove, models, plots, policy  # noqa: E402
-from ald.augment import augment  # noqa: E402
+from ald.pipeline import TextModel, clean, dialect_groups  # noqa: E402
 from ald.config import CLASSES, NEITHER, RESULTS, SEED  # noqa: E402
 from ald.metrics import evaluate  # noqa: E402
-from ald.text import clean_text, original_tokens  # noqa: E402
+from ald.text import original_tokens  # noqa: E402
 
 
 def log(msg):
@@ -36,45 +35,6 @@ def to_json(obj):
     if isinstance(obj, np.integer):
         return int(obj)
     return obj
-
-
-def clean(texts):
-    return [clean_text(t) for t in texts]
-
-
-def dialect_groups(props, threshold):
-    """'aae' / 'white' / 'other' from TwitterAAE proportions (see src/ald/dialect.py)."""
-    return np.where(props[:, 0] > threshold, "aae", np.where(props[:, 3] > threshold, "white", "other"))
-
-
-class TextModel:
-    """TF-IDF + balanced logistic regression with calibrated probabilities, plus the options that built it."""
-
-    def __init__(self, name, olid=False, negation=False, swaps=None):
-        """swaps: None, "all" (swap identities in every tweet) or "benign" (only in harmless tweets)."""
-        self.name, self.olid, self.negation, self.swaps = name, olid, negation, swaps
-
-    def training_data(self, train, olid_train):
-        df = pd.concat([train, olid_train]) if self.olid else train
-        texts, labels = clean(df.tweet), df.label.reset_index(drop=True)
-        if self.swaps == "all":
-            return augment(texts, labels)
-        if self.swaps == "benign":
-            return augment(texts, labels, only_labels={NEITHER})
-        return texts, labels
-
-    def fit(self, train, val, olid_train, olid_val):
-        X, y = self.training_data(train, olid_train)
-        self.pipe = models.improved_model(negation=self.negation).fit(X, y)
-        cal = pd.concat([val, olid_val]) if self.olid else val
-        self.cal = models.calibrate(self.pipe, clean(cal.tweet), cal.label)
-        return self
-
-    def labels(self, texts):
-        return self.pipe.predict(clean(texts))
-
-    def proba(self, texts):
-        return self.cal.predict_proba(clean(texts))
 
 
 def main():
@@ -121,7 +81,7 @@ def main():
         TextModel("TF-IDF + balanced LR"),
         TextModel("+ everyday tweets (OLID)", olid=True),
         TextModel("+ negation marking", olid=True, negation=True),
-        TextModel("+ identity swaps (final)", olid=True, negation=True, swaps=True),
+        TextModel("+ identity swaps (final)", olid=True, negation=True, swaps="all"),
     ]
     out["variants"] = {}
     for v in variants:

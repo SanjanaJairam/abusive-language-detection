@@ -20,12 +20,12 @@ Finally, I compared different moderation approaches to see whether human review 
 My original model had almost 86% accuracy but only caught 2% of actual hate speech. Most hateful tweets were classified as simply offensive.
 
 **The models also showed bias in what they flagged.**
-The improved model still flagged 37% of harmless AAE-aligned tweets as offensive or hateful, compared with 5% of harmless White-aligned tweets. This measures language patterns, not the author's race.
+The improved model still flagged 37% of harmless AAE-aligned tweets as offensive or hateful, compared with 6% of harmless White-aligned tweets. This measures language patterns, not the author's race.
 
 ![Harmless tweets wrongly flagged, by dialect](figures/dialect_false_flags.png)
 
 **How a platform uses the model matters too.**
-In my simulation, sending roughly 10% of the riskiest posts to human reviewers caught 56% of hate speech, compared with 41% through automatic removal. It also avoided wrongful removals, assuming reviewers made correct decisions.
+In my simulation, sending roughly 10% of the riskiest posts to human reviewers caught 57% of hate speech, compared with 41% through automatic removal. It also avoided wrongful removals, assuming reviewers made correct decisions.
 
 ## What I Took Away
 
@@ -43,7 +43,14 @@ bash get_data.sh
 python run_all.py
 ```
 
-This downloads the datasets, runs the experiments (about 10 minutes), and writes the results to `results/` and the figures to `figures/`. Newer datasets for extending this work are listed in [docs/datasets.md](docs/datasets.md).
+This downloads the datasets, runs the experiments (about 10 minutes), and writes the results to `results/` and the figures to `figures/`.
+
+To follow the work step by step, open the notebooks:
+
+- [`01_original_model.ipynb`](notebooks/01_original_model.ipynb): my original course-project model, cleaned up so it runs here.
+- [`02_safety_audit.ipynb`](notebooks/02_safety_audit.ipynb): the improved model, behavioural checks, dialect audit and moderation policies.
+
+Newer datasets for extending this work are listed in [docs/datasets.md](docs/datasets.md).
 
 ## Data and Credits
 
