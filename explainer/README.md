@@ -9,8 +9,8 @@ To rebuild after retraining:
 ```bash
 python explainer/make_data.py explainer/data.json \
   "Had a great day at the beach with my family" "this damn printer jammed again" \
-  "I hate immigrants" "I don't hate immigrants" "Immigrants are a plague on this country" \
-  "I am a queer person" "Saying immigrants are animals is disgusting and wrong" \
+  "I hate pineapple on pizza" "I don't hate pineapple on pizza" "I hate rock music" \
+  "I am a queer person" "Saying rock fans are idiots is rude and wrong" \
   "my brother be cooking for real tho" "I'm a proud Muslim woman"
 python explainer/build.py explainer/data.json results/results.json explainer/index.html
 ```

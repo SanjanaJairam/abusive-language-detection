@@ -20,21 +20,21 @@ META = [
     ("Works as intended", "Swearing, not hate",
      "“damn” is the strongest push, toward offensive. That matches how the training tweets were labelled: profanity counts as offensive, not hate. "
      "Hate stays at 1%, so a hate policy leaves the post up, and triage asks the author to reconsider instead of removing it. The original model called this post neither."),
-    ("Negation", "Hating a group",
-     "Hate-speech tests count “I hate [group]” as hate. The model gives it only 4%: “hate” pushes toward hate, but “immigrants” pushes harder toward offensive. "
-     "That word appears in just one of the 24,783 training tweets, so most of its push comes from letter chunks it shares with other words, like “rant”."),
-    ("Negation", "Not hating a group",
-     "Negation marking works as designed: “hate” becomes <span class=\"mono\">neg_hate</span>. But in the training tweets, 21 of the 23 that contain “don't hate” were labelled offensive, "
-     "so <span class=\"mono\">neg_hate</span> learned to push toward offensive. The model can't tell this sentence from the one above: 94% offensive here, 91% there."),
-    ("Where it fails", "Hate without a slur",
-     "Calling a group a plague is dehumanising, and hate-speech tests count it as hate. With no slur to go on, the model gives it 3% hate and 88% offensive. "
-     "That's below the review bar, so even triage only nudges the author and no person sees it. Most missed hate in this study looks like this."),
+    ("Negation", "A strong opinion",
+     "“hate” pushes toward hate (+1.16), but the food words pull the other way and the post is labelled neither, just: 51% against 47% offensive. "
+     "Hate stays at 2%. Now compare the next post, which only adds “don't”."),
+    ("Negation", "The same opinion, softened",
+     "Adding “don't” makes things worse. Negation marking turns “hate” into <span class=\"mono\">neg_hate</span>, as designed, but 21 of the 23 training tweets containing “don't hate” were labelled offensive, "
+     "so <span class=\"mono\">neg_hate</span> learned to push toward offensive (+0.78 here). The kinder sentence goes from neither to 69% offensive, and triage asks the author to reconsider."),
+    ("Where it fails", "Disliking a music genre",
+     "Not liking rock music isn't hate speech, but the model gives it a 15% chance of hate, just above the 13% review bar, so triage would send it to a person. "
+     "“hate” pushes hard toward hate (+1.57), and “music” adds to it: 14% of the 74 training tweets containing “music” were labelled hate. Over-flagging like this is what fills reviewers' queues."),
     ("Where it fails", "An identity word",
      "A harmless sentence from an identity-term test set. “queer” alone pushes +3.03 toward hate, the strongest push on this page, because 36% of training tweets containing it were labelled hate. "
      "The model labels the sentence hate. Auto-removal would delete it; triage sends it to a person instead."),
-    ("Where it fails", "Calling out hate",
-     "Someone criticising a hateful claim. The words they quote and “disgusting” push toward offensive, and “wrong” barely helps. "
-     "The model calls it 93% offensive, so triage nudges the person who was pushing back. A rule that removes anything flagged would delete their post."),
+    ("Where it fails", "Objecting to an insult",
+     "Someone pushing back against rudeness. Repeating the insult brings in “idiots”, which pushes +2.14 toward offensive, and “rude” and “wrong” barely help. "
+     "The model calls it 91% offensive, so triage nudges the person who was objecting. Counter-speech against real hate trips the model the same way: in the study's tests, 12% of it was called hate outright."),
     ("Where it fails", "African American English",
      "Ordinary speech with habitual “be” and “tho”; the dialect model rates its language 62% African American English. No single word is strong, but most push slightly toward offensive, reaching 59%. "
      "It falls just under the nudge bar, so triage allows it, but the model still labels it offensive and “remove anything flagged” would delete it. Across the dataset, that pattern is what makes harmless AAE-aligned posts far more likely to be flagged."),
