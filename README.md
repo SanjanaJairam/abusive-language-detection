@@ -29,6 +29,19 @@ The improved model still flagged 37% of harmless AAE-aligned tweets as offensive
 **How a platform uses the model matters too.**
 In my simulation, sending roughly 10% of the riskiest posts to human reviewers caught 57% of hate speech, compared with 41% through automatic removal. It also avoided wrongful removals, assuming reviewers made correct decisions.
 
+**A modern model makes the same mistakes, more strongly.**
+I ran the same tests on a current transformer model ([notebook 3](notebooks/03_modern_model.ipynb); Antypas & Camacho-Collados, 2023). It catches far more hate, but its errors fall on the same groups. It flags almost every harmless sentence that mentions lesbian or gay people, and it calls three in four non-hateful tweets in African American English *hate*, even though these tweets were part of its training data.
+
+| | My final model | Modern model |
+| --- | --- | --- |
+| Hateful test cases caught as hate (HateCheck) | 14% | 62% |
+| Harmless test cases called hate (HateCheck) | 8% | 14% |
+| Harmless sentences with "lesbian" / "gay" flagged | 50% / 38% | >99% / >99% |
+| Counter-speech called hate | 12% | 22% |
+| Non-hateful tweets called hate: AAE-aligned vs White-aligned | 3% vs 3% | 76% vs 15% |
+
+HateCheck and the identity sentences are new to both models, so those rows are a fair comparison. The model had seen the tweets in the last row during training, so that row is its best case.
+
 ## What I Took Away
 
 The biggest takeaway was that improving a model's accuracy doesn't automatically make it fairer or safer. Models can learn biases from their training data, and even a better-performing classifier can still make harmful mistakes.

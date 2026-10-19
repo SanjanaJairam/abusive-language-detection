@@ -1,0 +1,619 @@
+{
+  "models": [
+    "cardiffnlp/twitter-roberta-base-hate-latest",
+    "cardiffnlp/twitter-roberta-base-offensive"
+  ],
+  "note": "The hate model was trained on data including Davidson et al. (2017) and OLID; Davidson and dialect results are in-sample.",
+  "davidson_test": {
+    "accuracy": 0.3904,
+    "weighted_f1": 0.4637,
+    "macro_f1": 0.4529,
+    "per_class": {
+      "hate": {
+        "precision": 0.0859,
+        "recall": 0.8846,
+        "f1": 0.1565,
+        "support": 286
+      },
+      "offensive": {
+        "precision": 0.8379,
+        "recall": 0.2774,
+        "f1": 0.4168,
+        "support": 3839
+      },
+      "neither": {
+        "precision": 0.8349,
+        "recall": 0.7416,
+        "f1": 0.7855,
+        "support": 832
+      }
+    },
+    "confusion_matrix": [
+      [
+        253,
+        20,
+        13
+      ],
+      [
+        2665,
+        1065,
+        109
+      ],
+      [
+        29,
+        186,
+        617
+      ]
+    ]
+  },
+  "hatecheck": {
+    "n_cases": 3728,
+    "overall_accuracy": 0.6939,
+    "hate_detected": 0.618,
+    "hate_flagged_any": 0.8521,
+    "benign_wrongly_hate": 0.1391,
+    "benign_flagged_any": 0.6532,
+    "by_target": {
+      "Muslims": 0.7909,
+      "black people": 0.6415,
+      "disabled people": 0.3324,
+      "gay people": 0.6997,
+      "immigrants": 0.7003,
+      "trans people": 0.4034,
+      "women": 0.7534
+    }
+  },
+  "identity_terms": {
+    "overall_false_flag_rate": 0.1582,
+    "n_benign": 38282,
+    "max_term": "lesbian",
+    "max_rate": 0.9987,
+    "min_term": "younger",
+    "min_rate": 0.0
+  },
+  "checks": {
+    "everyday_speech": {
+      "olid_not_offensive_n": 620,
+      "olid_pass_rate": 0.929,
+      "olid_not_hate_rate": 0.9935,
+      "examples_pass_rate": 0.8667,
+      "examples_flagged": [
+        "My gay best friend is the funniest person I know",
+        "My grandma is deaf and the funniest person I know"
+      ]
+    },
+    "negation": {
+      "n_pairs": 133,
+      "score_drops_pass_rate": 0.9323,
+      "not_called_hate_pass_rate": 0.7669
+    },
+    "identity_swap": {
+      "n_templates": 442,
+      "consistent_pass_rate": 0.2964,
+      "mean_hate_score_spread": 0.5688,
+      "hate_detected_by_group": {
+        "Muslims": 0.7909,
+        "black people": 0.6415,
+        "disabled people": 0.3324,
+        "gay people": 0.6997,
+        "immigrants": 0.7003,
+        "trans people": 0.4034,
+        "women": 0.7534
+      }
+    },
+    "counter_speech": {
+      "n": 314,
+      "not_called_hate_pass_rate": 0.7803
+    }
+  },
+  "dialect_threshold_0.6": {
+    "aae": {
+      "n": 4439,
+      "gold_hate_share": 0.0403,
+      "gold_offensive_share": 0.9394,
+      "pred_hate_share": 0.7639,
+      "false_hate_rate": 0.7573,
+      "false_flag_rate": 0.4444,
+      "n_neither": 90,
+      "hate_recall": 0.9218
+    },
+    "white": {
+      "n": 1087,
+      "gold_hate_share": 0.0718,
+      "gold_offensive_share": 0.2916,
+      "pred_hate_share": 0.1987,
+      "false_hate_rate": 0.1467,
+      "false_flag_rate": 0.2038,
+      "n_neither": 692,
+      "hate_recall": 0.8718
+    },
+    "false_flag_ratio": 2.1812,
+    "false_hate_ratio": 5.1628
+  },
+  "hatecheck_by_functionality": [
+    {
+      "functionality": "spell_space_add_h",
+      "n": 173,
+      "accuracy": 0.3353,
+      "gold_hateful": true,
+      "pred_hate_rate": 0.3353,
+      "flagged_rate": 0.5202
+    },
+    {
+      "functionality": "spell_char_swap_h",
+      "n": 133,
+      "accuracy": 0.3835,
+      "gold_hateful": true,
+      "pred_hate_rate": 0.3835,
+      "flagged_rate": 0.6692
+    },
+    {
+      "functionality": "negate_pos_h",
+      "n": 140,
+      "accuracy": 0.4143,
+      "gold_hateful": true,
+      "pred_hate_rate": 0.4143,
+      "flagged_rate": 0.5786
+    },
+    {
+      "functionality": "derog_impl_h",
+      "n": 140,
+      "accuracy": 0.4286,
+      "gold_hateful": true,
+      "pred_hate_rate": 0.4286,
+      "flagged_rate": 0.7857
+    },
+    {
+      "functionality": "spell_leet_h",
+      "n": 173,
+      "accuracy": 0.4855,
+      "gold_hateful": true,
+      "pred_hate_rate": 0.4855,
+      "flagged_rate": 0.7572
+    },
+    {
+      "functionality": "spell_char_del_h",
+      "n": 140,
+      "accuracy": 0.5143,
+      "gold_hateful": true,
+      "pred_hate_rate": 0.5143,
+      "flagged_rate": 0.8714
+    },
+    {
+      "functionality": "slur_homonym_nh",
+      "n": 30,
+      "accuracy": 0.5667,
+      "gold_hateful": false,
+      "pred_hate_rate": 0.4333,
+      "flagged_rate": 0.5667
+    },
+    {
+      "functionality": "derog_neg_emote_h",
+      "n": 140,
+      "accuracy": 0.6429,
+      "gold_hateful": true,
+      "pred_hate_rate": 0.6429,
+      "flagged_rate": 0.9429
+    },
+    {
+      "functionality": "derog_dehum_h",
+      "n": 140,
+      "accuracy": 0.6429,
+      "gold_hateful": true,
+      "pred_hate_rate": 0.6429,
+      "flagged_rate": 0.9071
+    },
+    {
+      "functionality": "spell_space_del_h",
+      "n": 141,
+      "accuracy": 0.6525,
+      "gold_hateful": true,
+      "pred_hate_rate": 0.6525,
+      "flagged_rate": 0.8227
+    },
+    {
+      "functionality": "phrase_question_h",
+      "n": 140,
+      "accuracy": 0.6643,
+      "gold_hateful": true,
+      "pred_hate_rate": 0.6643,
+      "flagged_rate": 0.9429
+    },
+    {
+      "functionality": "counter_quote_nh",
+      "n": 173,
+      "accuracy": 0.6647,
+      "gold_hateful": false,
+      "pred_hate_rate": 0.3353,
+      "flagged_rate": 1.0
+    },
+    {
+      "functionality": "ref_subs_clause_h",
+      "n": 140,
+      "accuracy": 0.7071,
+      "gold_hateful": true,
+      "pred_hate_rate": 0.7071,
+      "flagged_rate": 0.9357
+    },
+    {
+      "functionality": "target_group_nh",
+      "n": 62,
+      "accuracy": 0.7097,
+      "gold_hateful": false,
+      "pred_hate_rate": 0.2903,
+      "flagged_rate": 0.7742
+    },
+    {
+      "functionality": "slur_reclaimed_nh",
+      "n": 81,
+      "accuracy": 0.716,
+      "gold_hateful": false,
+      "pred_hate_rate": 0.284,
+      "flagged_rate": 0.8148
+    },
+    {
+      "functionality": "derog_neg_attrib_h",
+      "n": 140,
+      "accuracy": 0.7357,
+      "gold_hateful": true,
+      "pred_hate_rate": 0.7357,
+      "flagged_rate": 0.9643
+    },
+    {
+      "functionality": "ref_subs_sent_h",
+      "n": 133,
+      "accuracy": 0.7368,
+      "gold_hateful": true,
+      "pred_hate_rate": 0.7368,
+      "flagged_rate": 1.0
+    },
+    {
+      "functionality": "slur_h",
+      "n": 144,
+      "accuracy": 0.7431,
+      "gold_hateful": true,
+      "pred_hate_rate": 0.7431,
+      "flagged_rate": 0.9236
+    },
+    {
+      "functionality": "phrase_opinion_h",
+      "n": 133,
+      "accuracy": 0.7444,
+      "gold_hateful": true,
+      "pred_hate_rate": 0.7444,
+      "flagged_rate": 0.9474
+    },
+    {
+      "functionality": "negate_neg_nh",
+      "n": 133,
+      "accuracy": 0.7669,
+      "gold_hateful": false,
+      "pred_hate_rate": 0.2331,
+      "flagged_rate": 0.6692
+    },
+    {
+      "functionality": "profanity_h",
+      "n": 140,
+      "accuracy": 0.7857,
+      "gold_hateful": true,
+      "pred_hate_rate": 0.7857,
+      "flagged_rate": 1.0
+    },
+    {
+      "functionality": "threat_norm_h",
+      "n": 140,
+      "accuracy": 0.7857,
+      "gold_hateful": true,
+      "pred_hate_rate": 0.7857,
+      "flagged_rate": 0.9357
+    },
+    {
+      "functionality": "threat_dir_h",
+      "n": 133,
+      "accuracy": 0.8271,
+      "gold_hateful": true,
+      "pred_hate_rate": 0.8271,
+      "flagged_rate": 0.9398
+    },
+    {
+      "functionality": "counter_ref_nh",
+      "n": 141,
+      "accuracy": 0.922,
+      "gold_hateful": false,
+      "pred_hate_rate": 0.078,
+      "flagged_rate": 0.9433
+    },
+    {
+      "functionality": "target_indiv_nh",
+      "n": 65,
+      "accuracy": 0.9231,
+      "gold_hateful": false,
+      "pred_hate_rate": 0.0769,
+      "flagged_rate": 0.8
+    },
+    {
+      "functionality": "target_obj_nh",
+      "n": 65,
+      "accuracy": 0.9846,
+      "gold_hateful": false,
+      "pred_hate_rate": 0.0154,
+      "flagged_rate": 0.6154
+    },
+    {
+      "functionality": "profanity_nh",
+      "n": 100,
+      "accuracy": 0.99,
+      "gold_hateful": false,
+      "pred_hate_rate": 0.01,
+      "flagged_rate": 0.94
+    },
+    {
+      "functionality": "ident_neutral_nh",
+      "n": 126,
+      "accuracy": 0.9921,
+      "gold_hateful": false,
+      "pred_hate_rate": 0.0079,
+      "flagged_rate": 0.1984
+    },
+    {
+      "functionality": "ident_pos_nh",
+      "n": 189,
+      "accuracy": 1.0,
+      "gold_hateful": false,
+      "pred_hate_rate": 0.0,
+      "flagged_rate": 0.127
+    }
+  ],
+  "identity_false_flags": [
+    {
+      "term": "lesbian",
+      "false_flag_rate": 0.9987,
+      "n": 757
+    },
+    {
+      "term": "gay",
+      "false_flag_rate": 0.9947,
+      "n": 757
+    },
+    {
+      "term": "homosexual",
+      "false_flag_rate": 0.967,
+      "n": 757
+    },
+    {
+      "term": "latinx",
+      "false_flag_rate": 0.9247,
+      "n": 757
+    },
+    {
+      "term": "queer",
+      "false_flag_rate": 0.8018,
+      "n": 757
+    },
+    {
+      "term": "taoist",
+      "false_flag_rate": 0.6539,
+      "n": 757
+    },
+    {
+      "term": "bisexual",
+      "false_flag_rate": 0.6063,
+      "n": 757
+    },
+    {
+      "term": "old",
+      "false_flag_rate": 0.3738,
+      "n": 757
+    },
+    {
+      "term": "sikh",
+      "false_flag_rate": 0.2193,
+      "n": 757
+    },
+    {
+      "term": "heterosexual",
+      "false_flag_rate": 0.2166,
+      "n": 757
+    },
+    {
+      "term": "blind",
+      "false_flag_rate": 0.214,
+      "n": 757
+    },
+    {
+      "term": "latino",
+      "false_flag_rate": 0.1902,
+      "n": 757
+    },
+    {
+      "term": "muslim",
+      "false_flag_rate": 0.1083,
+      "n": 757
+    },
+    {
+      "term": "deaf",
+      "false_flag_rate": 0.1057,
+      "n": 757
+    },
+    {
+      "term": "hispanic",
+      "false_flag_rate": 0.1057,
+      "n": 757
+    },
+    {
+      "term": "chinese",
+      "false_flag_rate": 0.0964,
+      "n": 757
+    },
+    {
+      "term": "transgender",
+      "false_flag_rate": 0.0766,
+      "n": 757
+    },
+    {
+      "term": "jewish",
+      "false_flag_rate": 0.0555,
+      "n": 757
+    },
+    {
+      "term": "asian",
+      "false_flag_rate": 0.0489,
+      "n": 757
+    },
+    {
+      "term": "protestant",
+      "false_flag_rate": 0.0383,
+      "n": 757
+    },
+    {
+      "term": "african",
+      "false_flag_rate": 0.0277,
+      "n": 757
+    },
+    {
+      "term": "white",
+      "false_flag_rate": 0.0277,
+      "n": 757
+    },
+    {
+      "term": "latina",
+      "false_flag_rate": 0.0238,
+      "n": 757
+    },
+    {
+      "term": "middle aged",
+      "false_flag_rate": 0.0159,
+      "n": 757
+    },
+    {
+      "term": "straight",
+      "false_flag_rate": 0.0132,
+      "n": 757
+    },
+    {
+      "term": "male",
+      "false_flag_rate": 0.0119,
+      "n": 757
+    },
+    {
+      "term": "mexican",
+      "false_flag_rate": 0.0106,
+      "n": 757
+    },
+    {
+      "term": "female",
+      "false_flag_rate": 0.0092,
+      "n": 757
+    },
+    {
+      "term": "american",
+      "false_flag_rate": 0.0079,
+      "n": 757
+    },
+    {
+      "term": "indian",
+      "false_flag_rate": 0.0066,
+      "n": 757
+    },
+    {
+      "term": "black",
+      "false_flag_rate": 0.0066,
+      "n": 757
+    },
+    {
+      "term": "african american",
+      "false_flag_rate": 0.0066,
+      "n": 757
+    },
+    {
+      "term": "elderly",
+      "false_flag_rate": 0.0053,
+      "n": 757
+    },
+    {
+      "term": "buddhist",
+      "false_flag_rate": 0.004,
+      "n": 757
+    },
+    {
+      "term": "older",
+      "false_flag_rate": 0.004,
+      "n": 757
+    },
+    {
+      "term": "canadian",
+      "false_flag_rate": 0.004,
+      "n": 757
+    },
+    {
+      "term": "catholic",
+      "false_flag_rate": 0.0026,
+      "n": 757
+    },
+    {
+      "term": "european",
+      "false_flag_rate": 0.0013,
+      "n": 757
+    },
+    {
+      "term": "christian",
+      "false_flag_rate": 0.0,
+      "n": 757
+    },
+    {
+      "term": "japanese",
+      "false_flag_rate": 0.0,
+      "n": 757
+    },
+    {
+      "term": "lgbt",
+      "false_flag_rate": 0.0,
+      "n": 757
+    },
+    {
+      "term": "lgbtq",
+      "false_flag_rate": 0.0,
+      "n": 757
+    },
+    {
+      "term": "millenial",
+      "false_flag_rate": 0.0,
+      "n": 757
+    },
+    {
+      "term": "middle eastern",
+      "false_flag_rate": 0.0,
+      "n": 757
+    },
+    {
+      "term": "paralyzed",
+      "false_flag_rate": 0.0,
+      "n": 757
+    },
+    {
+      "term": "nonbinary",
+      "false_flag_rate": 0.0,
+      "n": 757
+    },
+    {
+      "term": "trans",
+      "false_flag_rate": 0.0,
+      "n": 757
+    },
+    {
+      "term": "teenage",
+      "false_flag_rate": 0.0,
+      "n": 757
+    },
+    {
+      "term": "young",
+      "false_flag_rate": 0.0,
+      "n": 757
+    },
+    {
+      "term": "younger",
+      "false_flag_rate": 0.0,
+      "n": 757
+    }
+  ]
+}
