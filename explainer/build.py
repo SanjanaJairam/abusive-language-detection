@@ -15,32 +15,23 @@ out = Path(sys.argv[3])
 
 META = [
     ("Works as intended", "An ordinary post",
-     "Most words push gently toward neither, and the post is allowed under every policy. Even so, letter chunks pull in odd directions: "
-     "“family” starts with the same two letters as a slur that is common in the training tweets, so it leans toward hate. The other words outweigh it."),
+     "Words mostly push toward neither. Allowed under every policy."),
     ("Works as intended", "Swearing, not hate",
-     "“damn” is the strongest push, toward offensive. That matches how the training tweets were labelled: profanity counts as offensive, not hate. "
-     "Hate stays at 1%, so a hate policy leaves the post up, and triage asks the author to reconsider instead of removing it. The original model called this post neither."),
+     "“damn” pushes toward offensive, but hate stays at 1%. Triage nudges instead of removing."),
     ("Negation", "A strong opinion",
-     "“hate” pushes toward hate (+1.16), but the food words pull the other way and the post is labelled neither, just: 51% against 47% offensive. "
-     "Hate stays at 2%. Now compare the next post, which only adds “don't”."),
+     "“hate” pushes toward hate, but the post is still labelled neither, just. Compare the next one."),
     ("Negation", "The same opinion, softened",
-     "Adding “don't” makes things worse. Negation marking turns “hate” into <span class=\"mono\">neg_hate</span>, as designed, but 21 of the 23 training tweets containing “don't hate” were labelled offensive, "
-     "so <span class=\"mono\">neg_hate</span> learned to push toward offensive (+0.78 here). The kinder sentence goes from neither to 69% offensive, and triage asks the author to reconsider."),
+     "Adding “don't” makes it worse: 69% offensive. In training, 21 of 23 tweets with “don't hate” were offensive."),
     ("Where it fails", "Disliking a music genre",
-     "Not liking rock music isn't hate speech, but the model gives it a 15% chance of hate, just above the 13% review bar, so triage would send it to a person. "
-     "“hate” pushes hard toward hate (+1.57), and “music” adds to it: 14% of the 74 training tweets containing “music” were labelled hate. Over-flagging like this is what fills reviewers' queues."),
+     "Not hate speech, but 15% hate is over the review bar, so a person would have to check it."),
     ("Where it fails", "An identity word",
-     "A harmless sentence from an identity-term test set. “white” alone pushes +2.77 toward hate, the strongest push on this page, because 32% of the 327 training tweets containing it were labelled hate. "
-     "The model labels the sentence hate, so auto-removal would delete it; triage sends it to a person instead. Across 757 harmless test sentences with “white”, the final model flags 59%, against 4% for the original: one fix made this word worse."),
+     "A harmless sentence called 62% offensive. Harmless sentences with “latinx” get flagged 80% of the time, and 92% by a modern model."),
     ("Where it fails", "Objecting to an insult",
-     "Someone pushing back against rudeness. Repeating the insult brings in “idiots”, which pushes +2.14 toward offensive, and “rude” and “wrong” barely help. "
-     "The model calls it 91% offensive, so triage nudges the person who was objecting. Counter-speech against real hate trips the model the same way: in the study's tests, 12% of it was called hate outright."),
+     "Repeating the insult makes it 91% offensive, so the person pushing back gets nudged."),
     ("Where it fails", "African American English",
-     "Ordinary speech with habitual “be” and “tho”; the dialect model rates its language 62% African American English. No single word is strong, but most push slightly toward offensive, reaching 59%. "
-     "It falls just under the nudge bar, so triage allows it, but the model still labels it offensive and “remove anything flagged” would delete it. Across the dataset, that pattern is what makes harmless AAE-aligned posts far more likely to be flagged."),
+     "Everyday speech, labelled offensive. Across the dataset, harmless AAE-aligned posts were flagged 37% of the time vs 6% for White-aligned."),
     ("Better than before", "A proud identity statement",
-     "“Canadian” barely pushes either way, “proud” pulls toward neither, and the post is labelled neither at 66%. The original model called it offensive. "
-     "Across 757 harmless test sentences mentioning Canadians, false flags fell from 7% to 0.5% after training on everyday tweets and swapping identity words."),
+     "Now labelled neither. The original model called it offensive."),
 ]
 assert len(META) == len(model["examples"])
 for ex, (group, title, takeaway) in zip(model["examples"], META):
@@ -52,11 +43,11 @@ auto, tri = pol["Final model, auto-remove"], pol["Triage: 10% to human review"]
 orig = results["original"]["SVM (rbf, C=10, tuned)"]
 facts = [
     {"big": f"{orig['per_class']['hate']['recall']:.0%} of hate caught",
-     "text": f"The original model scored {orig['accuracy']:.0%} accuracy, but it labelled almost every hateful tweet merely offensive. Accuracy hid the failure."},
+     "text": f"by the original model, despite {orig['accuracy']:.0%} accuracy."},
     {"big": f"{d['aae']['false_flag_rate']:.0%} vs {d['white']['false_flag_rate']:.0%}",
-     "text": "Harmless AAE-aligned tweets flagged by the final model, against harmless White-aligned tweets. The bias starts in the human labels the model learned from."},
+     "text": "harmless AAE-aligned vs White-aligned tweets flagged."},
     {"big": f"{tri['hate_caught']:.0%} vs {auto['hate_caught']:.0%}",
-     "text": f"Hate caught by sending the riskiest 10% of posts to a person, against automatic removal, which also wrongly removed {auto['wrongful_removals']} harmless posts. Assumes reviewers are always right."},
+     "text": f"hate caught with human review vs auto-removal (which also removed {auto['wrongful_removals']} harmless posts)."},
 ]
 model["facts"] = facts
 html = (HERE / "template.html").read_text().replace("/*DATA*/", json.dumps(model, ensure_ascii=False))

@@ -8,7 +8,7 @@
 <meta property="og:image" content="https://abusive-language-detection-explain.vercel.app/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="The sentence 'I am a white person' with each word tinted by what it pushes toward; the model labels it hate at 46%.">
+<meta property="og:image:alt" content="The everyday sentence 'my brother be cooking for real tho', with each word tinted by what it pushes toward; the model labels it offensive at 59%.">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -190,8 +190,8 @@ footer { font-size: 13px; color: var(--muted); border-top: 1px solid var(--line)
   <header>
     <div class="eyebrow">Guided explainer · abusive-language detection</div>
     <h1>How a Filter Reads a Post</h1>
-    <p class="lead">Pick a post on the left, then step through the five things a hate-speech filter does with it. Every number on this page comes from the real model in this project, trained on 2017 tweets, so you can see exactly why it decides what it does, and where it goes wrong.</p>
-    <p class="note">The training data contains slurs. None appear here: the examples are everyday sentences, a few of them in the style of the test sentences researchers use to probe these models.</p>
+    <p class="lead">Pick a post and step through how a hate-speech filter reads it. Every number is from the real model.</p>
+    <p class="note">No slurs appear on this page.</p>
     <div class="legend" aria-label="Colour key">
       <span>Each word is tinted by what it pushes toward:</span>
       <span><i class="sw" style="background:var(--hate)"></i>hate</span>
@@ -229,8 +229,8 @@ footer { font-size: 13px; color: var(--muted); border-top: 1px solid var(--line)
     <h2>One post at a time hides the pattern</h2>
     <div class="facts" id="facts"></div>
     <div class="limits">
-      <p><strong>About this model.</strong> TF-IDF word, word-pair and letter-chunk features with class-balanced logistic regression (following Davidson et al., 2017). It was trained on 24,783 labelled tweets plus everyday tweets from OLID (Zampieri et al., 2019), with negation marking and identity-word swaps.</p>
-      <p><strong>Limits.</strong> The tweets date from 2017 and are English only. The policy results assume human reviewers always make the right call. "AAE-aligned" is estimated from language by a dialect model (Blodgett et al., 2016), not from who wrote the post. This page explains one research model; it is not a tool for checking real posts.</p>
+      <p><strong>Model:</strong> TF-IDF + logistic regression, trained on 2017 tweets (Davidson et al., 2017) plus everyday tweets (OLID).</p>
+      <p><strong>Limits:</strong> English only; reviewers assumed always right; dialect estimated from language, not identity. A research demo, not a tool for real posts.</p>
     </div>
   </section>
 
@@ -324,7 +324,7 @@ function stageClean(ex) {
     ["Remove the retweet marker RT", /^\s*rt\b/i.test(raw)],
   ];
   return `<h2>Clean the text</h2>
-    <p class="explain">Before reading anything, the filter tidies the post so that small differences in typing don't count as different words. It keeps punctuation and words like “not”, because they change meaning.</p>
+    <p class="explain">The filter tidies the text so small typing differences don't matter.</p>
     <div class="compare">
       <div class="row"><span class="k">Posted</span><div class="code">${esc(raw)}</div></div>
       <div class="row"><span class="k">Cleaned</span><div class="code">${esc(ex.clean)}</div></div>
@@ -342,7 +342,7 @@ function stageSplit(ex) {
   const word = ex.words[wi].text;
   const chunks = chunksOf(word);
   return `<h2>Split it into pieces</h2>
-    <p class="explain">The model never sees a sentence. It sees three kinds of pieces. Whole words get a <span class="mono">neg_</span> tag when they follow a negation like “don't”. Pairs of neighbouring words capture short phrases. Chunks of 2 to 5 letters inside each word help with misspellings, but they also link unrelated words that happen to share letters.</p>
+    <p class="explain">The model sees pieces, not sentences: words (tagged <span class="mono">neg_</span> after “don't”), word pairs, and 2–5 letter chunks.</p>
     <div class="row"><span class="k">Words</span><div class="tokens">${ex.tokens.map(t => `<span class="tok ${t.startsWith("neg_") ? "neg" : ""}">${esc(t)}</span>`).join("")}</div></div>
     <div class="counts">
       <div class="count"><b>${ex.features.word}</b><span>whole words the model knows</span></div>
@@ -350,7 +350,7 @@ function stageSplit(ex) {
       <div class="count"><b>${ex.features.chunk}</b><span>letter chunks the model knows</span></div>
     </div>
     <div class="row"><span class="k">Chunks of “${esc(word)}”</span><div class="tokens">${chunks.map(c => `<span class="tok">${esc(c)}</span>`).join("")}</div></div>
-    <p class="note">· marks the edge of a word. One-letter words like “I” or “a” aren't whole-word pieces, but they still form letter chunks. Tap a word in the post to see its chunks.</p>`;
+    <p class="note">· marks a word edge. Tap a word to see its chunks.</p>`;
 }
 
 function pushBars(push, scale) {
@@ -367,7 +367,7 @@ function stageWeigh(ex) {
   const scale = Math.max(...ex.words.flatMap(x => x.push.map(Math.abs)), 0.5);
   const kindName = { word: "whole word", pair: "word pair", chunk: "letter chunk" };
   return `<h2>Weigh each word</h2>
-    <p class="explain">During training, every piece got a weight for each label. A word's push is the total of its pieces' weights; a word pair's weight is split between its two words. Positive numbers push toward a label, negative ones away from it. The tints in the post show each word's strongest push. Tap any word.</p>
+    <p class="explain">Each piece learned a weight per label. A word's push is the sum of its pieces. Tap any word.</p>
     <div class="detail">
       <div class="panel"><h3>“${esc(w.text)}” pushes toward…</h3>${pushBars(w.push, scale)}</div>
       <div class="panel"><h3>Its strongest pieces</h3>
@@ -385,7 +385,7 @@ function stageAdd(ex) {
   const score = [0, 1, 2].map(k => ex.start[k] + sum[k]);
   const win = argmax(score);
   return `<h2>Add it up</h2>
-    <p class="explain">Each label starts from a fixed point the model learned, before it reads a word. Then every word's push is added. The highest total wins. The totals are then turned into chances that add up to 100%, and a final calibration step adjusts them so that, across many posts, “80%” is right about 80% of the time.</p>
+    <p class="explain">Start point + every word's push = a total per label. The highest wins; totals then become calibrated chances.</p>
     <div class="tablewrap"><table>
       <thead><tr><th>Label</th><th>Starting point</th><th>+ all words</th><th>= total</th><th>Chance</th><th>Calibrated</th></tr></thead>
       <tbody>${CLASSES.map((c, k) => `<tr class="${k === win ? "win" : ""}"><td><span style="color:${COLOR[c]}">■</span> ${c}</td>
@@ -393,19 +393,19 @@ function stageAdd(ex) {
     </table></div>
     <div class="probbars">${ex.probs.map((p, k) => `<div class="pb"><span>${CLASSES[k]}</span>
       <span class="track"><span class="fill" style="left:0;width:${p * 100}%;background:${COLOR[CLASSES[k]]}"></span></span><span class="v">${pct(p)}</span></div>`).join("")}</div>
-    <p class="note">Starting points and pushes are shown relative to the average of the three labels, so a word's three numbers add to zero. That doesn't change which label wins.</p>`;
+    `;
 }
 
 function stageDecide(ex) {
   const p = ex.probs;
   const flagged = argmax(p) !== 2;
   const triage = ex.triage;
-  const triageWhy = triage === "review" ? `Chance of hate is ${pct(p[0])}, at or above the review bar of ${pct(TH.t_review)}.`
-    : triage === "nudge" ? `Chance of hate is ${pct(p[0])}, below the review bar of ${pct(TH.t_review)}, and chance of offensive is ${pct(p[1])}, above the nudge bar of ${pct(TH.t_nudge)}.`
-    : `Chance of hate is ${pct(p[0])}, below the review bar of ${pct(TH.t_review)}, and chance of offensive is ${pct(p[1])}, below the nudge bar of ${pct(TH.t_nudge)}.`;
+  const triageWhy = triage === "review" ? `Hate ${pct(p[0])} is over the review bar (${pct(TH.t_review)}).`
+    : triage === "nudge" ? `Offensive ${pct(p[1])} is over the nudge bar (${pct(TH.t_nudge)}).`
+    : `Under both bars.`;
   const act = { allow: "Allow", nudge: "Ask author to reconsider", review: "Send to a person", remove: "Remove" };
   return `<h2>Decide what happens</h2>
-    <p class="explain">A label is not a decision. The platform's policy decides what to do with it, and the same model can be used in very different ways. The original 2017-style model labelled this post <strong>${esc(ex.original_label)}</strong>.</p>
+    <p class="explain">A label isn't a decision; the policy is. The original model said <strong>${esc(ex.original_label)}</strong>.</p>
     <div class="policies">
       <div class="policy"><h3>Auto-remove hate</h3><p class="rule">Remove whatever the model labels hate.</p>
         <span class="pill ${ex.auto_remove}">${act[ex.auto_remove]}</span>
@@ -413,7 +413,7 @@ function stageDecide(ex) {
       <div class="policy"><h3>Remove anything flagged</h3><p class="rule">Remove anything most likely hate or offensive.</p>
         <span class="pill ${flagged ? "remove" : "allow"}">${flagged ? "Remove" : "Allow"}</span>
         <p class="why">Most likely label: ${CLASSES[argmax(p)]} (${pct(Math.max(...p))}).</p></div>
-      <div class="policy recommended"><span class="tag">Safer design</span><h3>Triage</h3><p class="rule">The model never removes on its own: its best precision on hate is ${pct(TH.best_hate_precision)}, below the 80% bar. The riskiest posts go to a person (about 10% of posts); clearly offensive ones get a nudge.</p>
+      <div class="policy recommended"><span class="tag">Safer design</span><h3>Triage</h3><p class="rule">Never removes on its own. The riskiest 10% go to a person; clearly offensive posts get a nudge.</p>
         <span class="pill ${triage}">${act[triage]}</span>
         <p class="why">${triageWhy}</p></div>
     </div>`;
