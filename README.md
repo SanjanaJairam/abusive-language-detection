@@ -51,6 +51,7 @@ To follow the work step by step, open the notebooks:
 
 - [`01_original_model.ipynb`](notebooks/01_original_model.ipynb): my original course-project model, cleaned up so it runs here.
 - [`02_safety_audit.ipynb`](notebooks/02_safety_audit.ipynb): the improved model, behavioural checks, dialect audit and moderation policies.
+- [`03_modern_model.ipynb`](notebooks/03_modern_model.ipynb): the same audits on a current transformer model. Runs in Colab with a free GPU [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/SanjanaJairam/abusive-language-detection/blob/main/notebooks/03_modern_model.ipynb)
 
 Newer datasets for extending this work are listed in [docs/datasets.md](docs/datasets.md).
 
@@ -62,6 +63,7 @@ Newer datasets for extending this work are listed in [docs/datasets.md](docs/dat
 - Zampieri, M., et al. (2019). Predicting the type and target of offensive posts in social media (OLID). *NAACL*. Used via TweetEval (Barbieri et al., 2020).
 - Blodgett, S. L., Green, L., & O'Connor, B. (2016). Demographic dialectal variation in social media: A case study of African-American English. *EMNLP*. `src/ald/dialect.py` is adapted from their code.
 - Davidson, T., Bhattacharya, D., & Weber, I. (2019) and Sap, M., et al. (2019), whose dialect-bias audits this one follows.
+- Antypas, D., & Camacho-Collados, J. (2023). Robust hate speech detection in social media: A cross-dataset empirical evaluation. *WOAH*. Used in notebook 3.
 - Pennington, J., Socher, R., & Manning, C. D. (2014). GloVe: Global vectors for word representation. *EMNLP*.
 
 ## License

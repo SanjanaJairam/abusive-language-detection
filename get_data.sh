@@ -20,6 +20,13 @@ if [ ! -f unintended-ml-bias-analysis/bias_madlibs_77k.csv ]; then
   cp _bias_tmp/archive/unintended_ml_bias/bias_madlibs_data/adjectives_people.txt unintended-ml-bias-analysis/identity_terms.txt
   rm -rf _bias_tmp
 fi
+# Zampieri et al. (2019): OLID offensive / not offensive tweets, as packaged by TweetEval (Barbieri et al., 2020)
+if [ ! -f tweeteval/offensive/train_text.txt ]; then
+  clone cardiffnlp/tweeteval _tweeteval_tmp
+  mkdir -p tweeteval
+  cp -r _tweeteval_tmp/datasets/offensive tweeteval/
+  rm -rf _tweeteval_tmp
+fi
 # Pennington, Socher & Manning (2014): GloVe Twitter 25d, as packaged by gensim-data
 [ -f glove-twitter-25.gz ] || curl -L -o glove-twitter-25.gz \
   https://github.com/RaRe-Technologies/gensim-data/releases/download/glove-twitter-25/glove-twitter-25.gz
