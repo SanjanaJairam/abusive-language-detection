@@ -40,6 +40,17 @@ The project also includes three notebooks:
 - [Safety and bias audit](notebooks/02_safety_audit.ipynb)
 - [Modern transformer model](notebooks/03_modern_model.ipynb) ([Open in Colab](https://colab.research.google.com/github/SanjanaJairam/abusive-language-detection/blob/main/notebooks/03_modern_model.ipynb))
 
+## Data and Credits
+
+- Davidson, T., Warmsley, D., Macy, M., & Weber, I. (2017). Automated hate speech detection and the problem of offensive language. *ICWSM*.
+- Röttger, P., et al. (2021). HateCheck: Functional tests for hate speech detection models. *ACL*.
+- Dixon, L., et al. (2018). Measuring and mitigating unintended bias in text classification. *AIES*.
+- Zampieri, M., et al. (2019). Predicting the type and target of offensive posts in social media (OLID). *NAACL*. Used via TweetEval (Barbieri et al., 2020).
+- Blodgett, S. L., Green, L., & O'Connor, B. (2016). Demographic dialectal variation in social media: A case study of African-American English. *EMNLP*. `src/ald/dialect.py` is adapted from their code.
+- Davidson, T., Bhattacharya, D., & Weber, I. (2019) and Sap, M., et al. (2019), whose dialect-bias audits this one follows.
+- Antypas, D., & Camacho-Collados, J. (2023). Robust hate speech detection in social media: A cross-dataset empirical evaluation. *WOAH*. Used in notebook 3.
+- Pennington, J., Socher, R., & Manning, C. D. (2014). GloVe: Global vectors for word representation. *EMNLP*.
+  
 ## License
 
 Code is under the [MIT License](LICENSE). Datasets and pretrained models retain their original licenses.
