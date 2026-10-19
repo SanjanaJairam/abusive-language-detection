@@ -43,8 +43,9 @@ The project also includes three notebooks:
 
 ## Data and Credits
 
-This project builds on research and datasets from Davidson et al., Röttger et al., Dixon et al., Zampieri et al., Blodgett et al., Sap et al., Antypas & Camacho-Collados, and others. The dialect analysis adapts code from Blodgett et al. (2016).
+This project builds on research and datasets from Davidson et al. (2017, 2019), Röttger et al. (2021), Dixon et al. (2018), Zampieri et al. (2019), Blodgett et al. (2016), Sap et al. (2019), Antypas and Camacho-Collados (2023), and Pennington et al. (2014).
 
+The dialect analysis adapts code from Blodgett et al. (2016).
 ## License
 
 Code is under the [MIT License](LICENSE). Datasets and pretrained models retain their original licenses.
