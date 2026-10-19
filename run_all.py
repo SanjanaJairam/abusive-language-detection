@@ -154,8 +154,10 @@ def main():
     groups = dialect_groups(props, 0.6)[test_index]
     p_val, p_test = final.proba(val.tweet), final.proba(test.tweet)
     y_val, y_test = val.label.to_numpy(), test.label.to_numpy()
-    th5 = policy.choose_thresholds(p_val, y_val, review_budget=0.05)
-    th10 = policy.choose_thresholds(p_val, y_val, review_budget=0.10)
+    # Ordinary posts (OLID validation tweets marked not offensive) set a ceiling on how often people get nudged.
+    p_everyday = final.proba(olid["val"][olid["val"].label.eq(NEITHER)].tweet)
+    th5 = policy.choose_thresholds(p_val, y_val, review_budget=0.05, p_everyday=p_everyday)
+    th10 = policy.choose_thresholds(p_val, y_val, review_budget=0.10, p_everyday=p_everyday)
     out["policy_thresholds"] = {"review_5": th5, "review_10": th10}
     pol = {
         "Original model, auto-remove": policy.outcomes(policy.remove_predicted_hate(orig.predict(Xte)), y_test, groups),
@@ -169,7 +171,7 @@ def main():
     benign = olid["test"][olid["test"].label.eq(NEITHER)].tweet
     acts = policy.decide(final.proba(benign), "triage", th10)
     out["policy_everyday_feed"] = {a: float(np.mean(acts == a)) for a in ("allow", "nudge", "review", "remove")}
-    out["review_budget_sweep"] = policy.review_budget_sweep(p_val, y_val, p_test, y_test, groups)
+    out["review_budget_sweep"] = policy.review_budget_sweep(p_val, y_val, p_test, y_test, groups, p_everyday=p_everyday)
     plots.policies(list(pol.items()))
     plots.wrongful_by_dialect(list(pol.items()))
     plots.review_sweep(out["review_budget_sweep"], pol["Final model, auto-remove"])

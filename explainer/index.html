@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>How a Filter Reads a Post</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="A guided walk through how a hate-speech classifier turns a post into a decision, using a real model's numbers.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&display=swap">
+<style>
+[hidden] { display: none !important }
+html { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px) }
+
+/* Layout: a reading desk. Example list on the left, the post under the lens on the right, the five-stage pipeline beneath it. */
+:root {
+  --bg: #F5F5F9; --surface: #FFFFFF; --sunk: #EEEDF5; --ink: #1E1A38; --muted: #5F5A7C; --line: #DEDCEB;
+  --accent: #4A3FC4; --accent-ink: #FFFFFF;
+  --hate: #BE3656; --off: #A86E0B; --nei: #1F7D6B;
+  --font-display: "IBM Plex Serif", Georgia, "Times New Roman", serif;
+  --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --radius: 10px;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #121119; --surface: #1B1A26; --sunk: #232231; --ink: #ECEAF7; --muted: #A49FC0; --line: #312F43;
+  --accent: #A69DFF; --accent-ink: #15132A;
+  --hate: #F2809A; --off: #E3AE4C; --nei: #5FCAB5; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #121119; --surface: #1B1A26; --sunk: #232231; --ink: #ECEAF7; --muted: #A49FC0; --line: #312F43;
+  --accent: #A69DFF; --accent-ink: #15132A;
+  --hate: #F2809A; --off: #E3AE4C; --nei: #5FCAB5; color-scheme: dark }
+
+* { box-sizing: border-box }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 15px; line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 28px 56px }
+.wrap { max-width: 1100px; margin: 0 auto; display: grid; gap: 28px }
+h1, h2, h3 { text-wrap: balance; margin: 0 }
+p { margin: 0 }
+a { color: var(--accent) }
+button { font: inherit; color: inherit }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px }
+.mono { font-family: var(--font-mono) }
+.eyebrow { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 500 }
+
+/* Header */
+header { display: grid; gap: 12px; max-width: 70ch }
+h1 { font-family: var(--font-display); font-weight: 500; font-size: clamp(30px, 5vw, 44px); line-height: 1.1; letter-spacing: -.01em }
+.lead { font-size: 17px; color: var(--ink) }
+.note { font-size: 13px; color: var(--muted) }
+.legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 13px; color: var(--muted); align-items: center }
+.legend span { display: inline-flex; gap: 6px; align-items: center }
+.sw { width: 12px; height: 12px; border-radius: 3px; display: inline-block }
+
+/* Desk */
+.desk { display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 24px; align-items: start }
+@media (max-width: 820px) { .desk { grid-template-columns: minmax(0, 1fr) } }
+.picker { display: grid; gap: 18px; position: sticky; top: calc(env(safe-area-inset-top, 0px) + 16px) }
+@media (max-width: 820px) { .picker { position: static } }
+.group { display: grid; gap: 6px }
+.group-list { display: grid; gap: 4px }
+@media (max-width: 820px) { .group-list { display: flex; flex-wrap: wrap; gap: 6px } }
+.pick { text-align: left; background: transparent; border: 1px solid transparent; border-radius: 8px; padding: 8px 10px; cursor: pointer; display: grid; gap: 2px }
+.pick:hover { background: var(--sunk) }
+.pick[aria-pressed="true"] { background: var(--surface); border-color: var(--line); box-shadow: 0 1px 2px rgb(0 0 0 / .05) }
+.pick .t { font-weight: 500; font-size: 14px }
+.pick .s { font-size: 12.5px; color: var(--muted); font-family: var(--font-display); font-style: italic; line-height: 1.35 }
+@media (max-width: 820px) { .pick { border-color: var(--line); padding: 6px 10px } .pick .s { display: none } }
+
+.lens { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; display: grid; min-width: 0 }
+.post { padding: 22px 22px 18px; display: grid; gap: 14px; border-bottom: 1px solid var(--line) }
+.post-top { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; justify-content: space-between }
+.sentence { display: flex; flex-wrap: wrap; gap: 6px 4px; font-family: var(--font-display); font-size: clamp(21px, 3.4vw, 28px); line-height: 1.35 }
+.chip { border: 0; border-radius: 6px; padding: 1px 6px; cursor: pointer; background: transparent; font: inherit; color: var(--ink);
+  border-bottom: 3px solid transparent; transition: background-color .15s }
+.chip[aria-pressed="true"] { outline: 2px solid var(--ink); outline-offset: 1px }
+.verdict { display: inline-flex; gap: 8px; align-items: center; font-size: 13px; color: var(--muted) }
+.pill { display: inline-flex; align-items: center; gap: 6px; border-radius: 999px; padding: 3px 10px; font-size: 13px; font-weight: 600; border: 1px solid currentColor }
+.pill.hate { color: var(--hate) } .pill.offensive { color: var(--off) } .pill.neither { color: var(--nei) }
+.pill.allow { color: var(--nei) } .pill.nudge { color: var(--off) } .pill.review { color: var(--accent) } .pill.remove { color: var(--hate) }
+.probline { display: flex; height: 8px; border-radius: 4px; overflow: hidden; background: var(--sunk) }
+.probline i { display: block; height: 100% }
+.probkey { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums }
+.probkey b { color: var(--ink); font-weight: 600 }
+
+/* Stages */
+.stages { display: flex; overflow-x: auto; border-bottom: 1px solid var(--line); padding: 0 12px; gap: 2px; scrollbar-width: thin }
+.stage-tab { flex: none; background: transparent; border: 0; border-bottom: 2px solid transparent; padding: 12px 10px 10px; cursor: pointer; color: var(--muted); font-size: 14px; display: flex; gap: 8px; align-items: baseline }
+.stage-tab .n { font-family: var(--font-mono); font-size: 12px }
+.stage-tab[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); font-weight: 500 }
+.stage { padding: 22px; display: grid; gap: 16px; min-width: 0 }
+.stage h2 { font-size: 18px; font-weight: 600 }
+.stage .explain { color: var(--muted); max-width: 68ch }
+.nav { display: flex; justify-content: space-between; gap: 12px; padding: 0 22px 22px }
+.btn { border: 1px solid var(--line); background: var(--surface); border-radius: 8px; padding: 8px 14px; cursor: pointer; font-size: 14px }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); font-weight: 500 }
+.btn:disabled { opacity: .4; cursor: default }
+
+.compare { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px }
+.row { display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 12px; align-items: baseline }
+@media (max-width: 520px) { .row { grid-template-columns: minmax(0, 1fr); gap: 2px } }
+.row .k { font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted) }
+.code { font-family: var(--font-mono); font-size: 14px; background: var(--sunk); border-radius: 8px; padding: 10px 12px; overflow-wrap: anywhere }
+.rules { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; font-size: 14px }
+.rules li { display: flex; gap: 10px; align-items: baseline }
+.rules .mark { font-family: var(--font-mono); font-size: 12px; min-width: 64px; color: var(--muted) }
+.rules .mark.on { color: var(--accent); font-weight: 500 }
+
+.tokens { display: flex; flex-wrap: wrap; gap: 6px }
+.tok { font-family: var(--font-mono); font-size: 13.5px; padding: 3px 8px; border-radius: 6px; background: var(--sunk); border: 1px solid var(--line) }
+.tok.neg { border-color: var(--accent); color: var(--accent) }
+.counts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px }
+@media (max-width: 520px) { .counts { grid-template-columns: minmax(0, 1fr) } }
+.count { border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px; display: grid; gap: 2px }
+.count b { font-size: 22px; font-weight: 600; font-variant-numeric: tabular-nums }
+.count span { font-size: 13px; color: var(--muted) }
+
+.detail { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 18px }
+@media (max-width: 680px) { .detail { grid-template-columns: minmax(0, 1fr) } }
+.panel { border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; display: grid; gap: 10px; align-content: start; min-width: 0 }
+.panel h3 { font-size: 14px; font-weight: 600 }
+.bars { display: grid; gap: 8px }
+.bar { display: grid; grid-template-columns: 74px minmax(0, 1fr) 54px; gap: 8px; align-items: center; font-size: 13px }
+.track { position: relative; height: 14px; background: var(--sunk); border-radius: 4px }
+.track .zero { position: absolute; left: 50%; top: -3px; bottom: -3px; width: 1px; background: var(--muted) }
+.track .fill { position: absolute; top: 0; bottom: 0; border-radius: 3px }
+.bar .v { font-family: var(--font-mono); font-size: 12.5px; text-align: right; font-variant-numeric: tabular-nums }
+.pieces { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none }
+.pieces li { display: grid; grid-template-columns: 86px minmax(0, 1fr) auto; gap: 8px; align-items: baseline; font-size: 13px }
+.pieces .kind { color: var(--muted) }
+.pieces .txt { font-family: var(--font-mono); overflow-wrap: anywhere }
+.pieces .amt { font-family: var(--font-mono); font-size: 12.5px; font-variant-numeric: tabular-nums }
+
+.tablewrap { overflow-x: auto }
+table { border-collapse: collapse; width: 100%; font-size: 14px; font-variant-numeric: tabular-nums }
+th, td { text-align: right; padding: 8px 10px; border-bottom: 1px solid var(--line); white-space: nowrap }
+th:first-child, td:first-child { text-align: left }
+th { font-size: 12px; font-weight: 500; letter-spacing: .05em; text-transform: uppercase; color: var(--muted) }
+tr.win td { font-weight: 600 }
+.probbars { display: grid; gap: 8px }
+.pb { display: grid; grid-template-columns: 74px minmax(0, 1fr) 48px; gap: 10px; align-items: center; font-size: 14px }
+.pb .track { height: 18px }
+.pb .v { font-family: var(--font-mono); font-size: 13px; text-align: right }
+
+.policies { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px }
+@media (max-width: 760px) { .policies { grid-template-columns: minmax(0, 1fr) } }
+.policy { border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; display: grid; gap: 8px; align-content: start }
+.policy h3 { font-size: 14px; font-weight: 600 }
+.policy .rule { font-size: 13px; color: var(--muted) }
+.policy .why { font-size: 13px }
+.policy .pill { justify-self: start }
+.policy.recommended { border-color: var(--accent) }
+.tag { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); font-weight: 600 }
+
+.takeaway { margin: 0 22px 22px; border-radius: var(--radius); background: var(--sunk); padding: 16px 18px; display: grid; gap: 6px }
+.takeaway h3 { font-size: 15px; font-weight: 600 }
+.takeaway p { max-width: 70ch }
+
+/* Study */
+.study { display: grid; gap: 16px }
+.study h2 { font-family: var(--font-display); font-weight: 500; font-size: 26px }
+.facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px }
+@media (max-width: 760px) { .facts { grid-template-columns: minmax(0, 1fr) } }
+.fact { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 18px; display: grid; gap: 6px; align-content: start }
+.fact .big { font-size: 26px; font-weight: 600; font-variant-numeric: tabular-nums; letter-spacing: -.01em }
+.fact p { font-size: 14px; color: var(--muted) }
+.limits { font-size: 14px; color: var(--muted); max-width: 75ch; display: grid; gap: 8px }
+footer { font-size: 13px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 16px; display: grid; gap: 6px }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important } }
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Guided explainer · abusive-language detection</div>
+    <h1>How a Filter Reads a Post</h1>
+    <p class="lead">Pick a post on the left, then step through the five things a hate-speech filter does with it. Every number on this page comes from the real model in this project, trained on 2017 tweets, so you can see exactly why it decides what it does, and where it goes wrong.</p>
+    <p class="note">The training data contains slurs. None appear here: the examples are ordinary sentences and short test sentences used in hate-speech research.</p>
+    <div class="legend" aria-label="Colour key">
+      <span>Each word is tinted by what it pushes toward:</span>
+      <span><i class="sw" style="background:var(--hate)"></i>hate</span>
+      <span><i class="sw" style="background:var(--off)"></i>offensive</span>
+      <span><i class="sw" style="background:var(--nei)"></i>neither</span>
+    </div>
+  </header>
+
+  <div class="desk">
+    <nav class="picker" id="picker" aria-label="Example posts"></nav>
+
+    <section class="lens" aria-live="polite">
+      <div class="post">
+        <div class="post-top">
+          <span class="eyebrow" id="post-kind"></span>
+          <span class="verdict">Final model's label <span class="pill" id="verdict"></span></span>
+        </div>
+        <div class="sentence" id="sentence"></div>
+        <div class="probline" id="probline" aria-hidden="true"></div>
+        <div class="probkey" id="probkey"></div>
+      </div>
+
+      <div class="stages" role="tablist" id="tabs" aria-label="Pipeline steps"></div>
+      <div class="stage" id="stage" role="tabpanel"></div>
+      <div class="nav">
+        <button class="btn" id="back" type="button">Back</button>
+        <button class="btn primary" id="next" type="button">Next step</button>
+      </div>
+      <div class="takeaway" id="takeaway"></div>
+    </section>
+  </div>
+
+  <section class="study">
+    <div class="eyebrow">Across the whole study</div>
+    <h2>One post at a time hides the pattern</h2>
+    <div class="facts" id="facts"></div>
+    <div class="limits">
+      <p><strong>About this model.</strong> TF-IDF word, word-pair and letter-chunk features with class-balanced logistic regression (following Davidson et al., 2017). It was trained on 24,783 labelled tweets plus everyday tweets from OLID (Zampieri et al., 2019), with negation marking and identity-word swaps.</p>
+      <p><strong>Limits.</strong> The tweets date from 2017 and are English only. The policy results assume human reviewers always make the right call. "AAE-aligned" is estimated from language by a dialect model (Blodgett et al., 2016), not from who wrote the post. This page explains one research model; it is not a tool for checking real posts.</p>
+    </div>
+  </section>
+
+  <footer>
+    <p>Built from <a href="https://github.com/SanjanaJairam/abusive-language-detection" target="_blank" rel="noopener">github.com/SanjanaJairam/abusive-language-detection</a>, where the notebooks show every step in code.</p>
+    <p>Example sentences in the style of HateCheck (Röttger et al., 2021) and the identity templates of Dixon et al. (2018).</p>
+  </footer>
+</div>
+
+<script>
+const DATA = {"examples": [{"raw": "Had a great day at the beach with my family", "clean": "had a great day at the beach with my family", "tokens": ["had", "great", "day", "at", "the", "beach", "with", "my", "family"], "words": [{"text": "had", "push": [-0.379, 0.13, 0.25], "pieces": [{"kind": "word", "text": "had", "push": [-0.114, -0.052, 0.166]}, {"kind": "chunk", "text": "·h", "push": [0.009, 0.061, -0.07]}, {"kind": "chunk", "text": "ad·", "push": [-0.055, 0.031, 0.025]}, {"kind": "chunk", "text": "had·", "push": [-0.045, 0.032, 0.013]}, {"kind": "chunk", "text": "had", "push": [-0.028, -0.011, 0.039]}, {"kind": "chunk", "text": "ad", "push": [-0.037, 0.02, 0.017]}]}, {"text": "a", "push": [0.021, 0.199, -0.22], "pieces": [{"kind": "chunk", "text": "·a·", "push": [0.015, 0.104, -0.119]}, {"kind": "chunk", "text": "a·", "push": [-0.007, 0.071, -0.064]}, {"kind": "chunk", "text": "·a", "push": [0.013, 0.024, -0.037]}]}, {"text": "great", "push": [-0.626, -0.129, 0.755], "pieces": [{"kind": "word", "text": "great", "push": [-0.102, 0.046, 0.056]}, {"kind": "chunk", "text": "reat", "push": [-0.054, -0.034, 0.088]}, {"kind": "chunk", "text": "reat·", "push": [-0.044, -0.033, 0.077]}, {"kind": "chunk", "text": "great", "push": [-0.038, -0.035, 0.073]}, {"kind": "pair", "text": "great day", "push": [-0.021, -0.05, 0.071]}, {"kind": "chunk", "text": "eat", "push": [-0.064, 0.022, 0.042]}]}, {"text": "day", "push": [0.163, -0.281, 0.118], "pieces": [{"kind": "word", "text": "day", "push": [0.164, -0.242, 0.078]}, {"kind": "chunk", "text": "day·", "push": [-0.048, 0.059, -0.011]}, {"kind": "chunk", "text": "·day·", "push": [-0.016, -0.031, 0.047]}, {"kind": "chunk", "text": "ay·", "push": [0.047, -0.034, -0.013]}, {"kind": "chunk", "text": "ay", "push": [0.028, -0.046, 0.018]}, {"kind": "chunk", "text": "·d", "push": [-0.009, 0.044, -0.035]}]}, {"text": "at", "push": [0.17, -0.002, -0.168], "pieces": [{"kind": "word", "text": "at", "push": [0.13, -0.036, -0.095]}, {"kind": "pair", "text": "at the", "push": [0.016, -0.085, 0.069]}, {"kind": "chunk", "text": "·a", "push": [0.013, 0.024, -0.037]}, {"kind": "chunk", "text": "t·", "push": [0.018, 0.01, -0.028]}, {"kind": "chunk", "text": "·at", "push": [0.015, 0.009, -0.023]}, {"kind": "chunk", "text": "·at·", "push": [-0.007, 0.023, -0.016]}]}, {"text": "the", "push": [0.022, 0.001, -0.023], "pieces": [{"kind": "word", "text": "the", "push": [-0.077, -0.041, 0.118]}, {"kind": "chunk", "text": "the", "push": [0.023, 0.01, -0.033]}, {"kind": "chunk", "text": "·the", "push": [0.03, 0.001, -0.031]}, {"kind": "chunk", "text": "·the·", "push": [-0.005, 0.029, -0.024]}, {"kind": "chunk", "text": "·th", "push": [0.024, 0.005, -0.028]}, {"kind": "chunk", "text": "he·", "push": [-0.025, -0.001, 0.026]}]}, {"text": "beach", "push": [0.283, 0.132, -0.414], "pieces": [{"kind": "chunk", "text": "ch·", "push": [0.074, 0.069, -0.143]}, {"kind": "chunk", "text": "ch", "push": [0.059, 0.038, -0.097]}, {"kind": "chunk", "text": "ac", "push": [0.092, -0.062, -0.031]}, {"kind": "chunk", "text": "ach", "push": [0.05, -0.089, 0.039]}, {"kind": "chunk", "text": "each·", "push": [-0.015, 0.08, -0.065]}, {"kind": "chunk", "text": "·bea", "push": [0.072, -0.057, -0.016]}]}, {"text": "with", "push": [-0.2, 0.261, -0.061], "pieces": [{"kind": "pair", "text": "with my", "push": [-0.018, 0.151, -0.133]}, {"kind": "chunk", "text": "it", "push": [0.021, 0.061, -0.082]}, {"kind": "chunk", "text": "·wi", "push": [-0.049, 0.03, 0.02]}, {"kind": "chunk", "text": "h·", "push": [0.014, 0.033, -0.046]}, {"kind": "word", "text": "with", "push": [0.039, -0.042, 0.003]}, {"kind": "chunk", "text": "th·", "push": [-0.041, 0.005, 0.036]}]}, {"text": "my", "push": [-0.12, 0.246, -0.126], "pieces": [{"kind": "pair", "text": "my family", "push": [-0.073, -0.113, 0.186]}, {"kind": "word", "text": "my", "push": [-0.072, 0.129, -0.057]}, {"kind": "chunk", "text": "·my", "push": [0.0, 0.034, -0.034]}, {"kind": "chunk", "text": "·my·", "push": [0.01, 0.017, -0.027]}, {"kind": "chunk", "text": "my·", "push": [-0.007, 0.023, -0.016]}, {"kind": "chunk", "text": "y·", "push": [0.01, 0.007, -0.017]}]}, {"text": "family", "push": [0.345, -0.35, 0.005], "pieces": [{"kind": "chunk", "text": "·fa", "push": [0.152, 0.027, -0.179]}, {"kind": "chunk", "text": "fa", "push": [0.089, 0.014, -0.103]}, {"kind": "chunk", "text": "·f", "push": [0.04, 0.063, -0.103]}, {"kind": "chunk", "text": "mil", "push": [-0.002, -0.071, 0.073]}, {"kind": "chunk", "text": "ami", "push": [0.005, -0.067, 0.062]}, {"kind": "word", "text": "family", "push": [0.03, 0.028, -0.058]}]}], "start": [-2.145, 0.171, 1.974], "features": {"word": 9, "pair": 4, "chunk": 108}, "raw_probs": [0.009, 0.151, 0.84], "probs": [0.01, 0.28, 0.71], "label": "neither", "original_label": "neither", "triage": "allow", "auto_remove": "allow", "check": 0.0, "group": "Works as intended", "title": "An ordinary post", "takeaway": "Most words push gently toward neither, and the post is allowed under every policy. Even so, letter chunks pull in odd directions: “family” starts with the same two letters as a slur that is common in the training tweets, so it leans toward hate. The other words outweigh it."}, {"raw": "this damn printer jammed again", "clean": "this damn printer jammed again", "tokens": ["this", "damn", "printer", "jammed", "again"], "words": [{"text": "this", "push": [-0.081, 0.297, -0.215], "pieces": [{"kind": "pair", "text": "this damn", "push": [-0.018, 0.23, -0.212]}, {"kind": "word", "text": "this", "push": [-0.064, 0.039, 0.024]}, {"kind": "chunk", "text": "hi", "push": [0.053, 0.007, -0.061]}, {"kind": "chunk", "text": "his·", "push": [-0.022, 0.052, -0.03]}, {"kind": "chunk", "text": "this·", "push": [-0.039, 0.051, -0.012]}, {"kind": "chunk", "text": "·thi", "push": [-0.007, -0.023, 0.031]}]}, {"text": "damn", "push": [0.124, 1.282, -1.405], "pieces": [{"kind": "word", "text": "damn", "push": [-0.096, 0.546, -0.449]}, {"kind": "chunk", "text": "damn", "push": [0.024, 0.084, -0.108]}, {"kind": "chunk", "text": "amn", "push": [0.028, 0.078, -0.106]}, {"kind": "chunk", "text": "·damn", "push": [0.018, 0.088, -0.106]}, {"kind": "chunk", "text": "damn·", "push": [0.024, 0.068, -0.092]}, {"kind": "chunk", "text": "amn·", "push": [0.021, 0.066, -0.087]}]}, {"text": "printer", "push": [-0.256, 0.249, 0.007], "pieces": [{"kind": "chunk", "text": "ter·", "push": [-0.098, 0.078, 0.02]}, {"kind": "chunk", "text": "rin", "push": [-0.01, 0.077, -0.067]}, {"kind": "chunk", "text": "nter·", "push": [-0.055, 0.01, 0.045]}, {"kind": "chunk", "text": "nter", "push": [0.034, -0.051, 0.017]}, {"kind": "chunk", "text": "print", "push": [-0.008, 0.042, -0.034]}, {"kind": "chunk", "text": "rint", "push": [-0.008, 0.042, -0.034]}]}, {"text": "jammed", "push": [0.06, -0.226, 0.167], "pieces": [{"kind": "chunk", "text": "med·", "push": [0.052, -0.095, 0.043]}, {"kind": "chunk", "text": "jam", "push": [0.07, -0.038, -0.032]}, {"kind": "chunk", "text": "amme", "push": [-0.059, 0.015, 0.044]}, {"kind": "chunk", "text": "·jamm", "push": [-0.041, -0.017, 0.057]}, {"kind": "chunk", "text": "jamm", "push": [-0.041, -0.017, 0.057]}, {"kind": "chunk", "text": "mm", "push": [-0.017, 0.057, -0.04]}]}, {"text": "again", "push": [-0.175, 0.384, -0.209], "pieces": [{"kind": "word", "text": "again", "push": [-0.243, 0.406, -0.163]}, {"kind": "chunk", "text": "ag", "push": [0.145, -0.033, -0.112]}, {"kind": "chunk", "text": "aga", "push": [-0.064, -0.001, 0.066]}, {"kind": "chunk", "text": "ga", "push": [0.05, 0.011, -0.061]}, {"kind": "chunk", "text": "in·", "push": [0.052, -0.017, -0.035]}, {"kind": "chunk", "text": "·a", "push": [0.014, 0.026, -0.041]}]}], "start": [-2.145, 0.171, 1.974], "features": {"word": 3, "pair": 1, "chunk": 90}, "raw_probs": [0.008, 0.856, 0.136], "probs": [0.011, 0.8, 0.19], "label": "offensive", "original_label": "neither", "triage": "nudge", "auto_remove": "allow", "check": 0.0, "group": "Works as intended", "title": "Swearing, not hate", "takeaway": "“damn” is the strongest push, toward offensive. That matches how the training tweets were labelled: profanity counts as offensive, not hate. Hate stays at 1%, so a hate policy leaves the post up, and triage asks the author to reconsider instead of removing it. The original model called this post neither."}, {"raw": "I hate immigrants", "clean": "i hate immigrants", "tokens": ["hate", "immigrants"], "words": [{"text": "i", "push": [0.092, 0.023, -0.114], "pieces": [{"kind": "chunk", "text": "·i·", "push": [0.059, 0.005, -0.064]}, {"kind": "chunk", "text": "i·", "push": [0.01, 0.016, -0.027]}, {"kind": "chunk", "text": "·i", "push": [0.022, 0.001, -0.023]}]}, {"text": "hate", "push": [1.651, -0.144, -1.507], "pieces": [{"kind": "word", "text": "hate", "push": [0.925, -0.22, -0.704]}, {"kind": "chunk", "text": "·hat", "push": [0.164, -0.022, -0.142]}, {"kind": "chunk", "text": "·hate", "push": [0.132, 0.02, -0.152]}, {"kind": "chunk", "text": "hate", "push": [0.125, 0.024, -0.149]}, {"kind": "chunk", "text": "hate·", "push": [0.13, -0.034, -0.097]}, {"kind": "chunk", "text": "·h", "push": [0.011, 0.073, -0.085]}]}, {"text": "immigrants", "push": [-0.546, 1.779, -1.233], "pieces": [{"kind": "word", "text": "immigrants", "push": [-0.08, 0.281, -0.201]}, {"kind": "chunk", "text": "ig", "push": [0.132, 0.051, -0.183]}, {"kind": "chunk", "text": "rant", "push": [0.043, 0.127, -0.17]}, {"kind": "chunk", "text": "mmi", "push": [-0.074, 0.092, -0.018]}, {"kind": "chunk", "text": "immi", "push": [-0.029, 0.089, -0.06]}, {"kind": "chunk", "text": "gra", "push": [-0.081, 0.037, 0.044]}]}], "start": [-2.145, 0.171, 1.974], "features": {"word": 2, "pair": 0, "chunk": 54}, "raw_probs": [0.055, 0.886, 0.059], "probs": [0.036, 0.911, 0.053], "label": "offensive", "original_label": "offensive", "triage": "nudge", "auto_remove": "allow", "check": 0.0, "group": "Negation", "title": "Hating a group", "takeaway": "Hate-speech tests count “I hate [group]” as hate. The model gives it only 4%: “hate” pushes toward hate, but “immigrants” pushes harder toward offensive. That word appears in just one of the 24,783 training tweets, so most of its push comes from letter chunks it shares with other words, like “rant”."}, {"raw": "I don't hate immigrants", "clean": "i don't hate immigrants", "tokens": ["don't", "neg_hate", "neg_immigrants"], "words": [{"text": "i", "push": [0.086, 0.021, -0.107], "pieces": [{"kind": "chunk", "text": "·i·", "push": [0.055, 0.005, -0.06]}, {"kind": "chunk", "text": "i·", "push": [0.01, 0.015, -0.025]}, {"kind": "chunk", "text": "·i", "push": [0.021, 0.001, -0.022]}]}, {"text": "don't", "push": [-0.048, 0.365, -0.317], "pieces": [{"kind": "pair", "text": "don't neg_hate", "push": [-0.203, 0.451, -0.249]}, {"kind": "word", "text": "don't", "push": [-0.132, 0.119, 0.014]}, {"kind": "chunk", "text": "·don", "push": [0.06, -0.01, -0.05]}, {"kind": "chunk", "text": "don", "push": [0.054, -0.001, -0.053]}, {"kind": "chunk", "text": "·d", "push": [-0.01, 0.05, -0.04]}, {"kind": "chunk", "text": "t·", "push": [0.024, 0.014, -0.037]}]}, {"text": "hate", "push": [0.318, 1.033, -1.351], "pieces": [{"kind": "word", "text": "neg_hate", "push": [-0.262, 0.737, -0.475]}, {"kind": "chunk", "text": "·hat", "push": [0.154, -0.021, -0.133]}, {"kind": "chunk", "text": "·hate", "push": [0.124, 0.019, -0.143]}, {"kind": "chunk", "text": "hate", "push": [0.118, 0.022, -0.14]}, {"kind": "chunk", "text": "hate·", "push": [0.122, -0.031, -0.09]}, {"kind": "chunk", "text": "·h", "push": [0.011, 0.069, -0.079]}]}, {"text": "immigrants", "push": [-0.437, 1.404, -0.967], "pieces": [{"kind": "chunk", "text": "ig", "push": [0.124, 0.047, -0.171]}, {"kind": "chunk", "text": "rant", "push": [0.04, 0.119, -0.159]}, {"kind": "chunk", "text": "mmi", "push": [-0.07, 0.087, -0.017]}, {"kind": "chunk", "text": "immi", "push": [-0.027, 0.083, -0.056]}, {"kind": "chunk", "text": "gra", "push": [-0.076, 0.035, 0.042]}, {"kind": "chunk", "text": "·immi", "push": [-0.026, 0.076, -0.05]}]}], "start": [-2.145, 0.171, 1.974], "features": {"word": 2, "pair": 1, "chunk": 72}, "raw_probs": [0.005, 0.972, 0.023], "probs": [0.013, 0.937, 0.05], "label": "offensive", "original_label": "offensive", "triage": "nudge", "auto_remove": "allow", "check": 0.0, "group": "Negation", "title": "Not hating a group", "takeaway": "Negation marking works as designed: “hate” becomes <span class=\"mono\">neg_hate</span>. But in the training tweets, 21 of the 23 that contain “don't hate” were labelled offensive, so <span class=\"mono\">neg_hate</span> learned to push toward offensive. The model can't tell this sentence from the one above: 94% offensive here, 91% there."}, {"raw": "Immigrants are a plague on this country", "clean": "immigrants are a plague on this country", "tokens": ["immigrants", "are", "plague", "on", "this", "country"], "words": [{"text": "immigrants", "push": [-0.354, 1.263, -0.909], "pieces": [{"kind": "pair", "text": "immigrants are", "push": [-0.003, 0.216, -0.213]}, {"kind": "chunk", "text": "ig", "push": [0.092, 0.035, -0.127]}, {"kind": "chunk", "text": "rant", "push": [0.03, 0.089, -0.119]}, {"kind": "word", "text": "immigrants", "push": [-0.033, 0.115, -0.082]}, {"kind": "chunk", "text": "mmi", "push": [-0.052, 0.065, -0.013]}, {"kind": "chunk", "text": "immi", "push": [-0.02, 0.062, -0.042]}]}, {"text": "are", "push": [0.016, 0.137, -0.153], "pieces": [{"kind": "word", "text": "are", "push": [0.077, -0.014, -0.063]}, {"kind": "chunk", "text": "are", "push": [-0.037, 0.003, 0.035]}, {"kind": "chunk", "text": "·a", "push": [0.011, 0.02, -0.031]}, {"kind": "chunk", "text": "are·", "push": [-0.023, 0.025, -0.002]}, {"kind": "chunk", "text": "re", "push": [-0.002, -0.015, 0.017]}, {"kind": "chunk", "text": "e·", "push": [0.012, -0.002, -0.01]}]}, {"text": "a", "push": [0.018, 0.168, -0.185], "pieces": [{"kind": "chunk", "text": "·a·", "push": [0.013, 0.088, -0.1]}, {"kind": "chunk", "text": "a·", "push": [-0.006, 0.06, -0.054]}, {"kind": "chunk", "text": "·a", "push": [0.011, 0.02, -0.031]}]}, {"text": "plague", "push": [0.093, 0.234, -0.327], "pieces": [{"kind": "word", "text": "plague", "push": [-0.002, 0.136, -0.135]}, {"kind": "chunk", "text": "ag", "push": [0.132, -0.03, -0.102]}, {"kind": "pair", "text": "plague on", "push": [-0.001, 0.065, -0.063]}, {"kind": "chunk", "text": "lag", "push": [-0.039, -0.008, 0.047]}, {"kind": "chunk", "text": "gue", "push": [-0.035, 0.029, 0.006]}, {"kind": "chunk", "text": "lague", "push": [-0.0, 0.035, -0.034]}]}, {"text": "on", "push": [0.039, -0.073, 0.034], "pieces": [{"kind": "pair", "text": "on this", "push": [0.073, -0.089, 0.016]}, {"kind": "word", "text": "on", "push": [-0.072, 0.001, 0.072]}, {"kind": "chunk", "text": "on·", "push": [0.032, -0.014, -0.019]}, {"kind": "chunk", "text": "n·", "push": [0.029, 0.002, -0.031]}, {"kind": "chunk", "text": "on", "push": [0.011, -0.024, 0.013]}, {"kind": "chunk", "text": "·on·", "push": [-0.01, -0.01, 0.019]}]}, {"text": "this", "push": [0.105, 0.027, -0.132], "pieces": [{"kind": "pair", "text": "this country", "push": [0.227, -0.156, -0.071]}, {"kind": "chunk", "text": "hi", "push": [0.049, 0.007, -0.055]}, {"kind": "chunk", "text": "his·", "push": [-0.02, 0.047, -0.027]}, {"kind": "chunk", "text": "this·", "push": [-0.035, 0.046, -0.011]}, {"kind": "word", "text": "this", "push": [-0.037, 0.023, 0.014]}, {"kind": "chunk", "text": "·thi", "push": [-0.007, -0.021, 0.028]}]}, {"text": "country", "push": [0.957, -0.223, -0.734], "pieces": [{"kind": "word", "text": "country", "push": [0.339, -0.096, -0.243]}, {"kind": "chunk", "text": "unt", "push": [0.078, 0.04, -0.118]}, {"kind": "chunk", "text": "ntry·", "push": [0.053, -0.027, -0.026]}, {"kind": "chunk", "text": "try·", "push": [0.05, 0.002, -0.051]}, {"kind": "chunk", "text": "ry·", "push": [0.045, -0.015, -0.031]}, {"kind": "chunk", "text": "untry", "push": [0.044, -0.001, -0.042]}]}], "start": [-2.145, 0.171, 1.974], "features": {"word": 6, "pair": 4, "chunk": 115}, "raw_probs": [0.044, 0.855, 0.101], "probs": [0.03, 0.875, 0.096], "label": "offensive", "original_label": "neither", "triage": "nudge", "auto_remove": "allow", "check": 0.0, "group": "Where it fails", "title": "Hate without a slur", "takeaway": "Calling a group a plague is dehumanising, and hate-speech tests count it as hate. With no slur to go on, the model gives it 3% hate and 88% offensive. That's below the review bar, so even triage only nudges the author and no person sees it. Most missed hate in this study looks like this."}, {"raw": "I am a queer person", "clean": "i am a queer person", "tokens": ["am", "queer", "person"], "words": [{"text": "i", "push": [0.108, 0.026, -0.133], "pieces": [{"kind": "chunk", "text": "·i·", "push": [0.067, 0.006, -0.072]}, {"kind": "chunk", "text": "·i", "push": [0.029, 0.002, -0.031]}, {"kind": "chunk", "text": "i·", "push": [0.012, 0.019, -0.03]}]}, {"text": "am", "push": [-0.439, -0.067, 0.506], "pieces": [{"kind": "word", "text": "am", "push": [-0.417, 0.094, 0.323]}, {"kind": "chunk", "text": "am·", "push": [-0.096, -0.001, 0.097]}, {"kind": "chunk", "text": "·am", "push": [0.039, -0.094, 0.055]}, {"kind": "chunk", "text": "·am·", "push": [0.058, -0.079, 0.021]}, {"kind": "chunk", "text": "am", "push": [-0.05, -0.007, 0.057]}, {"kind": "chunk", "text": "·a", "push": [0.018, 0.033, -0.051]}]}, {"text": "a", "push": [0.029, 0.271, -0.299], "pieces": [{"kind": "chunk", "text": "·a·", "push": [0.02, 0.141, -0.162]}, {"kind": "chunk", "text": "a·", "push": [-0.01, 0.097, -0.087]}, {"kind": "chunk", "text": "·a", "push": [0.018, 0.033, -0.051]}]}, {"text": "queer", "push": [3.027, 0.078, -3.105], "pieces": [{"kind": "word", "text": "queer", "push": [0.324, 0.572, -0.896]}, {"kind": "chunk", "text": "queer", "push": [0.394, -0.056, -0.338]}, {"kind": "chunk", "text": "ueer", "push": [0.392, -0.046, -0.347]}, {"kind": "chunk", "text": "·quee", "push": [0.336, -0.04, -0.296]}, {"kind": "chunk", "text": "quee", "push": [0.314, -0.025, -0.29]}, {"kind": "chunk", "text": "uee", "push": [0.312, -0.014, -0.297]}]}, {"text": "person", "push": [0.923, -0.854, -0.07], "pieces": [{"kind": "word", "text": "person", "push": [0.354, -0.444, 0.089]}, {"kind": "chunk", "text": "rson·", "push": [0.069, -0.151, 0.083]}, {"kind": "chunk", "text": "per", "push": [-0.026, -0.089, 0.115]}, {"kind": "chunk", "text": "ers", "push": [0.106, -0.058, -0.048]}, {"kind": "chunk", "text": "son·", "push": [0.098, -0.066, -0.033]}, {"kind": "chunk", "text": "·pe", "push": [-0.018, 0.067, -0.049]}]}], "start": [-2.145, 0.171, 1.974], "features": {"word": 3, "pair": 0, "chunk": 50}, "raw_probs": [0.816, 0.125, 0.059], "probs": [0.449, 0.449, 0.102], "label": "hate", "original_label": "offensive", "triage": "review", "auto_remove": "remove", "check": 0.0, "group": "Where it fails", "title": "An identity word", "takeaway": "A harmless sentence from an identity-term test set. “queer” alone pushes +3.03 toward hate, the strongest push on this page, because 36% of training tweets containing it were labelled hate. The model labels the sentence hate. Auto-removal would delete it; triage sends it to a person instead."}, {"raw": "Saying immigrants are animals is disgusting and wrong", "clean": "saying immigrants are animals is disgusting and wrong", "tokens": ["saying", "immigrants", "are", "animals", "is", "disgusting", "and", "wrong"], "words": [{"text": "saying", "push": [-0.27, 0.241, 0.029], "pieces": [{"kind": "word", "text": "saying", "push": [-0.177, 0.153, 0.024]}, {"kind": "chunk", "text": "aying", "push": [-0.045, 0.034, 0.011]}, {"kind": "chunk", "text": "ay", "push": [0.02, -0.033, 0.013]}, {"kind": "chunk", "text": "ayi", "push": [-0.014, 0.021, -0.007]}, {"kind": "chunk", "text": "ayin", "push": [-0.013, 0.02, -0.007]}, {"kind": "chunk", "text": "ing", "push": [-0.019, 0.008, 0.011]}]}, {"text": "immigrants", "push": [-0.308, 1.083, -0.775], "pieces": [{"kind": "pair", "text": "immigrants are", "push": [-0.003, 0.197, -0.194]}, {"kind": "chunk", "text": "ig", "push": [0.078, 0.03, -0.108]}, {"kind": "word", "text": "immigrants", "push": [-0.03, 0.105, -0.075]}, {"kind": "chunk", "text": "rant", "push": [0.025, 0.075, -0.1]}, {"kind": "chunk", "text": "mmi", "push": [-0.044, 0.055, -0.011]}, {"kind": "chunk", "text": "immi", "push": [-0.017, 0.052, -0.035]}]}, {"text": "are", "push": [0.019, 0.119, -0.137], "pieces": [{"kind": "word", "text": "are", "push": [0.07, -0.012, -0.057]}, {"kind": "chunk", "text": "are", "push": [-0.032, 0.002, 0.029]}, {"kind": "chunk", "text": "·a", "push": [0.008, 0.014, -0.022]}, {"kind": "chunk", "text": "are·", "push": [-0.019, 0.021, -0.002]}, {"kind": "chunk", "text": "re", "push": [-0.002, -0.012, 0.014]}, {"kind": "chunk", "text": "e·", "push": [0.012, -0.002, -0.01]}]}, {"text": "animals", "push": [0.099, 0.159, -0.258], "pieces": [{"kind": "word", "text": "animals", "push": [0.248, -0.05, -0.198]}, {"kind": "chunk", "text": "ni", "push": [0.082, -0.001, -0.081]}, {"kind": "chunk", "text": "mal", "push": [-0.049, 0.071, -0.022]}, {"kind": "chunk", "text": "als·", "push": [-0.056, 0.009, 0.046]}, {"kind": "chunk", "text": "mals·", "push": [0.05, -0.02, -0.03]}, {"kind": "chunk", "text": "als", "push": [-0.05, 0.024, 0.026]}]}, {"text": "is", "push": [-0.037, 0.18, -0.143], "pieces": [{"kind": "pair", "text": "is disgusting", "push": [-0.019, 0.249, -0.23]}, {"kind": "word", "text": "is", "push": [-0.011, 0.064, -0.053]}, {"kind": "chunk", "text": "·is", "push": [-0.002, -0.022, 0.025]}, {"kind": "chunk", "text": "·is·", "push": [-0.019, 0.004, 0.015]}, {"kind": "chunk", "text": "s·", "push": [0.004, 0.011, -0.015]}, {"kind": "chunk", "text": "·i", "push": [0.013, 0.001, -0.014]}]}, {"text": "disgusting", "push": [0.07, 1.437, -1.507], "pieces": [{"kind": "word", "text": "disgusting", "push": [0.025, 0.444, -0.469]}, {"kind": "chunk", "text": "sg", "push": [0.031, 0.064, -0.095]}, {"kind": "chunk", "text": "gusti", "push": [0.004, 0.077, -0.08]}, {"kind": "chunk", "text": "ustin", "push": [0.063, 0.014, -0.077]}, {"kind": "chunk", "text": "gust", "push": [0.054, 0.018, -0.073]}, {"kind": "chunk", "text": "isg", "push": [0.024, 0.048, -0.072]}]}, {"text": "and", "push": [-0.041, -0.112, 0.153], "pieces": [{"kind": "pair", "text": "and wrong", "push": [-0.005, -0.099, 0.104]}, {"kind": "word", "text": "and", "push": [-0.021, -0.059, 0.08]}, {"kind": "chunk", "text": "·a", "push": [0.008, 0.014, -0.022]}, {"kind": "chunk", "text": "nd", "push": [-0.015, -0.0, 0.015]}, {"kind": "chunk", "text": "·an", "push": [-0.011, 0.005, 0.006]}, {"kind": "chunk", "text": "·and", "push": [-0.01, -0.001, 0.011]}]}, {"text": "wrong", "push": [0.062, -0.174, 0.112], "pieces": [{"kind": "word", "text": "wrong", "push": [0.137, -0.029, -0.108]}, {"kind": "chunk", "text": "rong·", "push": [-0.017, -0.025, 0.041]}, {"kind": "chunk", "text": "ro", "push": [-0.015, 0.032, -0.017]}, {"kind": "chunk", "text": "ron", "push": [-0.028, 0.028, 0.001]}, {"kind": "chunk", "text": "wr", "push": [0.015, -0.027, 0.012]}, {"kind": "chunk", "text": "rong", "push": [-0.001, -0.024, 0.024]}]}], "start": [-2.145, 0.171, 1.974], "features": {"word": 8, "pair": 4, "chunk": 149}, "raw_probs": [0.003, 0.971, 0.025], "probs": [0.01, 0.925, 0.065], "label": "offensive", "original_label": "offensive", "triage": "nudge", "auto_remove": "allow", "check": 0.0, "group": "Where it fails", "title": "Calling out hate", "takeaway": "Someone criticising a hateful claim. The words they quote and “disgusting” push toward offensive, and “wrong” barely helps. The model calls it 93% offensive, so triage nudges the person who was pushing back. A rule that removes anything flagged would delete their post."}, {"raw": "my brother be cooking for real tho", "clean": "my brother be cooking for real tho", "tokens": ["my", "brother", "be", "cooking", "for", "real", "tho"], "words": [{"text": "my", "push": [-0.214, 0.353, -0.139], "pieces": [{"kind": "pair", "text": "my brother", "push": [-0.284, 0.211, 0.074]}, {"kind": "word", "text": "my", "push": [-0.074, 0.133, -0.059]}, {"kind": "chunk", "text": "·my", "push": [0.0, 0.038, -0.039]}, {"kind": "chunk", "text": "·my·", "push": [0.011, 0.019, -0.03]}, {"kind": "chunk", "text": "y·", "push": [0.016, 0.012, -0.028]}, {"kind": "chunk", "text": "my·", "push": [-0.008, 0.026, -0.018]}]}, {"text": "brother", "push": [-0.186, 0.395, -0.21], "pieces": [{"kind": "word", "text": "brother", "push": [-0.043, 0.073, -0.031]}, {"kind": "chunk", "text": "·br", "push": [-0.073, 0.033, 0.041]}, {"kind": "chunk", "text": "ot", "push": [0.011, 0.048, -0.059]}, {"kind": "chunk", "text": "oth", "push": [0.029, 0.024, -0.053]}, {"kind": "chunk", "text": "·bro", "push": [-0.052, 0.044, 0.008]}, {"kind": "chunk", "text": "ro", "push": [-0.023, 0.051, -0.027]}]}, {"text": "be", "push": [0.073, -0.01, -0.063], "pieces": [{"kind": "chunk", "text": "·b", "push": [0.017, 0.024, -0.042]}, {"kind": "chunk", "text": "·be·", "push": [0.011, -0.028, 0.017]}, {"kind": "chunk", "text": "·be", "push": [0.021, -0.001, -0.02]}, {"kind": "chunk", "text": "e·", "push": [0.019, -0.004, -0.016]}, {"kind": "chunk", "text": "be", "push": [0.001, 0.008, -0.009]}, {"kind": "chunk", "text": "be·", "push": [0.003, -0.009, 0.006]}]}, {"text": "cooking", "push": [0.301, -0.045, -0.257], "pieces": [{"kind": "chunk", "text": "·coo", "push": [0.159, -0.092, -0.067]}, {"kind": "chunk", "text": "coo", "push": [0.129, -0.076, -0.053]}, {"kind": "chunk", "text": "ki", "push": [0.058, 0.009, -0.067]}, {"kind": "chunk", "text": "king·", "push": [0.063, -0.037, -0.026]}, {"kind": "chunk", "text": "king", "push": [0.058, -0.032, -0.027]}, {"kind": "chunk", "text": "kin", "push": [0.056, -0.006, -0.05]}]}, {"text": "for", "push": [-0.191, 0.025, 0.165], "pieces": [{"kind": "word", "text": "for", "push": [-0.097, -0.029, 0.126]}, {"kind": "chunk", "text": "·f", "push": [0.045, 0.072, -0.118]}, {"kind": "pair", "text": "for real", "push": [-0.091, 0.036, 0.055]}, {"kind": "chunk", "text": "for", "push": [-0.032, -0.007, 0.039]}, {"kind": "chunk", "text": "·fo", "push": [0.019, 0.011, -0.029]}, {"kind": "chunk", "text": "or·", "push": [-0.007, -0.022, 0.029]}]}, {"text": "real", "push": [-0.486, 0.448, 0.038], "pieces": [{"kind": "word", "text": "real", "push": [-0.252, 0.161, 0.091]}, {"kind": "chunk", "text": "real·", "push": [-0.073, 0.124, -0.051]}, {"kind": "chunk", "text": "eal·", "push": [-0.05, 0.06, -0.01]}, {"kind": "chunk", "text": "rea", "push": [-0.048, -0.007, 0.055]}, {"kind": "chunk", "text": "·re", "push": [0.048, -0.045, -0.003]}, {"kind": "chunk", "text": "ea", "push": [-0.047, 0.03, 0.017]}]}, {"text": "tho", "push": [-0.002, 0.281, -0.279], "pieces": [{"kind": "word", "text": "tho", "push": [-0.232, 0.088, 0.144]}, {"kind": "chunk", "text": "ho", "push": [0.071, 0.079, -0.15]}, {"kind": "chunk", "text": "ho·", "push": [-0.016, 0.065, -0.049]}, {"kind": "chunk", "text": "·tho·", "push": [0.023, 0.032, -0.054]}, {"kind": "chunk", "text": "tho·", "push": [0.022, 0.03, -0.053]}, {"kind": "chunk", "text": "tho", "push": [0.038, -0.04, 0.002]}]}], "start": [-2.145, 0.171, 1.974], "features": {"word": 7, "pair": 3, "chunk": 95}, "raw_probs": [0.007, 0.592, 0.401], "probs": [0.007, 0.591, 0.402], "label": "offensive", "original_label": "offensive", "triage": "allow", "auto_remove": "allow", "check": 0.0, "group": "Where it fails", "title": "African American English", "takeaway": "Ordinary speech with habitual “be” and “tho”; the dialect model rates its language 62% African American English. No single word is strong, but most push slightly toward offensive, reaching 59%. It falls just under the nudge bar, so triage allows it, but the model still labels it offensive and “remove anything flagged” would delete it. Across the dataset, that pattern is what makes harmless AAE-aligned posts far more likely to be flagged."}, {"raw": "I'm a proud Muslim woman", "clean": "i'm a proud muslim woman", "tokens": ["i'm", "proud", "muslim", "woman"], "words": [{"text": "i'm", "push": [-0.298, 0.327, -0.029], "pieces": [{"kind": "word", "text": "i'm", "push": [-0.133, 0.08, 0.053]}, {"kind": "pair", "text": "i'm proud", "push": [-0.01, 0.08, -0.07]}, {"kind": "chunk", "text": "'m", "push": [-0.042, 0.049, -0.007]}, {"kind": "chunk", "text": "i'", "push": [-0.024, 0.043, -0.019]}, {"kind": "chunk", "text": "i'm", "push": [-0.033, 0.041, -0.008]}, {"kind": "chunk", "text": "'m·", "push": [-0.026, 0.033, -0.007]}]}, {"text": "a", "push": [0.025, 0.221, -0.246], "pieces": [{"kind": "chunk", "text": "·a·", "push": [0.016, 0.113, -0.129]}, {"kind": "chunk", "text": "a·", "push": [-0.008, 0.077, -0.069]}, {"kind": "chunk", "text": "·a", "push": [0.017, 0.031, -0.048]}]}, {"text": "proud", "push": [-0.076, -0.322, 0.399], "pieces": [{"kind": "word", "text": "proud", "push": [-0.174, -0.092, 0.266]}, {"kind": "chunk", "text": "oud·", "push": [0.051, -0.103, 0.052]}, {"kind": "chunk", "text": "ud·", "push": [0.06, -0.003, -0.057]}, {"kind": "chunk", "text": "roud·", "push": [-0.011, -0.044, 0.055]}, {"kind": "chunk", "text": "ro", "push": [-0.022, 0.048, -0.026]}, {"kind": "chunk", "text": "roud", "push": [-0.018, -0.028, 0.046]}]}, {"text": "muslim", "push": [1.094, -0.464, -0.63], "pieces": [{"kind": "word", "text": "muslim", "push": [0.25, -0.124, -0.126]}, {"kind": "chunk", "text": "sli", "push": [0.108, -0.058, -0.05]}, {"kind": "chunk", "text": "·musl", "push": [0.096, -0.021, -0.074]}, {"kind": "chunk", "text": "musl", "push": [0.089, -0.031, -0.058]}, {"kind": "chunk", "text": "musli", "push": [0.089, -0.031, -0.058]}, {"kind": "chunk", "text": "uslim", "push": [0.089, -0.031, -0.058]}]}, {"text": "woman", "push": [-0.239, 0.372, -0.134], "pieces": [{"kind": "word", "text": "woman", "push": [-0.077, -0.025, 0.101]}, {"kind": "chunk", "text": "oma", "push": [0.039, 0.035, -0.073]}, {"kind": "chunk", "text": "·woma", "push": [-0.043, 0.063, -0.02]}, {"kind": "chunk", "text": "·wom", "push": [-0.011, 0.057, -0.046]}, {"kind": "chunk", "text": "oman", "push": [-0.011, 0.056, -0.044]}, {"kind": "chunk", "text": "ma", "push": [-0.051, 0.03, 0.021]}]}], "start": [-2.145, 0.171, 1.974], "features": {"word": 4, "pair": 1, "chunk": 70}, "raw_probs": [0.036, 0.254, 0.71], "probs": [0.024, 0.347, 0.63], "label": "neither", "original_label": "offensive", "triage": "allow", "auto_remove": "allow", "check": 0.0, "group": "Better than before", "title": "A proud identity statement", "takeaway": "“Muslim” still pushes toward hate (+1.09), but “proud” and the starting point outweigh it, and the post is labelled neither at 63%. The original model called this post offensive. Training on everyday tweets and swapping identity words is what changed it."}], "thresholds": {"t_auto": null, "t_review": 0.1338, "t_nudge": 0.5957, "target_precision": 0.8, "best_hate_precision": 0.7692, "review_budget": 0.1, "nudge_precision": 0.95, "everyday_nudge_rate": 0.05}, "facts": [{"big": "2% of hate caught", "text": "The original model scored 86% accuracy, but it labelled almost every hateful tweet merely offensive. Accuracy hid the failure."}, {"big": "37% vs 6%", "text": "Harmless AAE-aligned tweets flagged by the final model, against harmless White-aligned tweets. The bias starts in the human labels the model learned from."}, {"big": "57% vs 41%", "text": "Hate caught by sending the riskiest 10% of posts to a person, against automatic removal, which also wrongly removed 181 harmless posts. Assumes reviewers are always right."}]};
+const CLASSES = ["hate", "offensive", "neither"];
+const COLOR = { hate: "var(--hate)", offensive: "var(--off)", neither: "var(--nei)" };
+const TH = DATA.thresholds;
+const STAGES = [
+  ["Clean", "clean"], ["Split into pieces", "split"], ["Weigh each word", "weigh"], ["Add it up", "add"], ["Decide", "decide"]
+];
+const pct = v => Math.round(v * 100) + "%";
+const num = v => (v > 0 ? "+" : v < 0 ? "−" : "") + Math.abs(v).toFixed(2);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+const argmax = a => a.indexOf(Math.max(...a));
+
+let state = { ex: 0, stage: 0, word: null };
+try { const s = JSON.parse(localStorage.getItem("filter-explainer") || "null"); if (s && DATA.examples[s.ex]) state = { ex: s.ex, stage: s.stage || 0, word: null }; } catch (e) {}
+const save = () => { try { localStorage.setItem("filter-explainer", JSON.stringify({ ex: state.ex, stage: state.stage })); } catch (e) {} };
+
+function strongestWord(ex) {
+  let best = 0, bi = 0;
+  ex.words.forEach((w, i) => { const m = Math.max(...w.push.map(Math.abs)); if (m > best) { best = m; bi = i; } });
+  return bi;
+}
+function tint(push) {
+  const k = argmax(push), mag = Math.max(...push.map(Math.abs));
+  const strength = Math.min(1, mag / 1.6);
+  return { cls: CLASSES[k], bg: `color-mix(in srgb, ${COLOR[CLASSES[k]]} ${Math.round(8 + strength * 42)}%, transparent)`,
+           border: `color-mix(in srgb, ${COLOR[CLASSES[k]]} ${Math.round(30 + strength * 70)}%, transparent)` };
+}
+
+function renderPicker() {
+  const groups = [];
+  DATA.examples.forEach((ex, i) => {
+    let g = groups.find(g => g.name === ex.group);
+    if (!g) groups.push(g = { name: ex.group, items: [] });
+    g.items.push(i);
+  });
+  document.getElementById("picker").innerHTML = groups.map(g => `
+    <div class="group"><div class="eyebrow">${esc(g.name)}</div><div class="group-list">
+      ${g.items.map(i => `<button class="pick" type="button" data-ex="${i}" aria-pressed="${i === state.ex}">
+        <span class="t">${esc(DATA.examples[i].title)}</span><span class="s">“${esc(DATA.examples[i].raw)}”</span></button>`).join("")}
+    </div></div>`).join("");
+  document.querySelectorAll(".pick").forEach(b => b.addEventListener("click", () => {
+    state.ex = +b.dataset.ex; state.word = null; save(); render();
+  }));
+}
+
+function renderPost(ex) {
+  document.getElementById("post-kind").textContent = ex.title;
+  const v = document.getElementById("verdict");
+  v.className = "pill " + ex.label; v.textContent = ex.label;
+  const showTint = state.stage >= 2;
+  document.getElementById("sentence").innerHTML = ex.words.map((w, i) => {
+    const t = tint(w.push);
+    const style = showTint ? `background:${t.bg};border-bottom-color:${t.border}` : "";
+    return `<button class="chip" type="button" data-w="${i}" aria-pressed="${state.stage === 2 && i === state.word}"
+      style="${style}" title="${showTint ? "Pushes most toward " + t.cls : "Step 3 shows what this word pushes toward"}">${esc(w.text)}</button>`;
+  }).join("");
+  document.querySelectorAll(".chip").forEach(c => c.addEventListener("click", () => {
+    state.word = +c.dataset.w; state.stage = 2; save(); render();
+  }));
+  document.getElementById("probline").innerHTML = ex.probs.map((p, k) => `<i style="width:${p * 100}%;background:${COLOR[CLASSES[k]]}"></i>`).join("");
+  document.getElementById("probkey").innerHTML = ex.probs.map((p, k) => `<span>${CLASSES[k]} <b>${pct(p)}</b></span>`).join("");
+}
+
+function renderTabs() {
+  document.getElementById("tabs").innerHTML = STAGES.map(([name], i) =>
+    `<button class="stage-tab" role="tab" type="button" data-s="${i}" aria-selected="${i === state.stage}"><span class="n">${i + 1}</span>${name}</button>`).join("");
+  document.querySelectorAll(".stage-tab").forEach(b => b.addEventListener("click", () => { state.stage = +b.dataset.s; save(); render(); }));
+  document.getElementById("back").disabled = state.stage === 0;
+  const next = document.getElementById("next");
+  next.textContent = state.stage === STAGES.length - 1 ? "Next example" : "Next step";
+}
+
+function stageClean(ex) {
+  const raw = ex.raw;
+  const rules = [
+    ["Lowercase everything", raw !== raw.toLowerCase()],
+    ["Replace links with URL", /https?:\/\/|www\./.test(raw)],
+    ["Replace @names with @USER", /@\w/.test(raw)],
+    ["Drop the # from hashtags", raw.includes("#")],
+    ["Shorten long letter runs (soooooo → sooo)", /(.)\1{3,}/.test(raw)],
+    ["Remove the retweet marker RT", /^\s*rt\b/i.test(raw)],
+  ];
+  return `<h2>Clean the text</h2>
+    <p class="explain">Before reading anything, the filter tidies the post so that small differences in typing don't count as different words. It keeps punctuation and words like “not”, because they change meaning.</p>
+    <div class="compare">
+      <div class="row"><span class="k">Posted</span><div class="code">${esc(raw)}</div></div>
+      <div class="row"><span class="k">Cleaned</span><div class="code">${esc(ex.clean)}</div></div>
+    </div>
+    <ul class="rules">${rules.map(([r, on]) => `<li><span class="mark ${on ? "on" : ""}">${on ? "applied" : "not needed"}</span>${esc(r)}</li>`).join("")}</ul>`;
+}
+
+function chunksOf(word) {
+  const w = " " + word + " ", out = [];
+  for (let n = 2; n <= 5; n++) for (let i = 0; i + n <= w.length; i++) out.push(w.slice(i, i + n).replace(/ /g, "·"));
+  return out;
+}
+function stageSplit(ex) {
+  const wi = state.word ?? strongestWord(ex);
+  const word = ex.words[wi].text;
+  const chunks = chunksOf(word);
+  return `<h2>Split it into pieces</h2>
+    <p class="explain">The model never sees a sentence. It sees three kinds of pieces. Whole words get a <span class="mono">neg_</span> tag when they follow a negation like “don't”. Pairs of neighbouring words capture short phrases. Chunks of 2 to 5 letters inside each word help with misspellings, but they also link unrelated words that happen to share letters.</p>
+    <div class="row"><span class="k">Words</span><div class="tokens">${ex.tokens.map(t => `<span class="tok ${t.startsWith("neg_") ? "neg" : ""}">${esc(t)}</span>`).join("")}</div></div>
+    <div class="counts">
+      <div class="count"><b>${ex.features.word}</b><span>whole words the model knows</span></div>
+      <div class="count"><b>${ex.features.pair}</b><span>word pairs the model knows</span></div>
+      <div class="count"><b>${ex.features.chunk}</b><span>letter chunks the model knows</span></div>
+    </div>
+    <div class="row"><span class="k">Chunks of “${esc(word)}”</span><div class="tokens">${chunks.map(c => `<span class="tok">${esc(c)}</span>`).join("")}</div></div>
+    <p class="note">· marks the edge of a word. One-letter words like “I” or “a” aren't whole-word pieces, but they still form letter chunks. Tap a word in the post to see its chunks.</p>`;
+}
+
+function pushBars(push, scale) {
+  return `<div class="bars">${push.map((v, k) => {
+    const w = Math.min(50, Math.abs(v) / scale * 50);
+    const left = v >= 0 ? 50 : 50 - w;
+    return `<div class="bar"><span>${CLASSES[k]}</span><span class="track"><span class="zero"></span>
+      <span class="fill" style="left:${left}%;width:${w}%;background:${COLOR[CLASSES[k]]}"></span></span><span class="v">${num(v)}</span></div>`;
+  }).join("")}</div>`;
+}
+function stageWeigh(ex) {
+  const wi = state.word ?? strongestWord(ex);
+  const w = ex.words[wi];
+  const scale = Math.max(...ex.words.flatMap(x => x.push.map(Math.abs)), 0.5);
+  const kindName = { word: "whole word", pair: "word pair", chunk: "letter chunk" };
+  return `<h2>Weigh each word</h2>
+    <p class="explain">During training, every piece got a weight for each label. A word's push is the total of its pieces' weights; a word pair's weight is split between its two words. Positive numbers push toward a label, negative ones away from it. The tints in the post show each word's strongest push. Tap any word.</p>
+    <div class="detail">
+      <div class="panel"><h3>“${esc(w.text)}” pushes toward…</h3>${pushBars(w.push, scale)}</div>
+      <div class="panel"><h3>Its strongest pieces</h3>
+        <ul class="pieces">${w.pieces.map(p => {
+          const k = argmax(p.push); const v = p.push[k];
+          return `<li><span class="kind">${kindName[p.kind]}</span><span class="txt">${esc(p.text)}</span>
+            <span class="amt" style="color:${COLOR[CLASSES[k]]}">${num(v)} ${CLASSES[k]}</span></li>`;
+        }).join("") || "<li>No pieces in the model's vocabulary.</li>"}</ul>
+      </div>
+    </div>`;
+}
+
+function stageAdd(ex) {
+  const sum = [0, 1, 2].map(k => ex.words.reduce((s, w) => s + w.push[k], 0));
+  const score = [0, 1, 2].map(k => ex.start[k] + sum[k]);
+  const win = argmax(score);
+  return `<h2>Add it up</h2>
+    <p class="explain">Each label starts from a fixed point the model learned, before it reads a word. Then every word's push is added. The highest total wins. The totals are then turned into chances that add up to 100%, and a final calibration step adjusts them so that, across many posts, “80%” is right about 80% of the time.</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Label</th><th>Starting point</th><th>+ all words</th><th>= total</th><th>Chance</th><th>Calibrated</th></tr></thead>
+      <tbody>${CLASSES.map((c, k) => `<tr class="${k === win ? "win" : ""}"><td><span style="color:${COLOR[c]}">■</span> ${c}</td>
+        <td>${num(ex.start[k])}</td><td>${num(sum[k])}</td><td>${num(score[k])}</td><td>${pct(ex.raw_probs[k])}</td><td>${pct(ex.probs[k])}</td></tr>`).join("")}</tbody>
+    </table></div>
+    <div class="probbars">${ex.probs.map((p, k) => `<div class="pb"><span>${CLASSES[k]}</span>
+      <span class="track"><span class="fill" style="left:0;width:${p * 100}%;background:${COLOR[CLASSES[k]]}"></span></span><span class="v">${pct(p)}</span></div>`).join("")}</div>
+    <p class="note">Starting points and pushes are shown relative to the average of the three labels, so a word's three numbers add to zero. That doesn't change which label wins.</p>`;
+}
+
+function stageDecide(ex) {
+  const p = ex.probs;
+  const flagged = argmax(p) !== 2;
+  const triage = ex.triage;
+  const triageWhy = triage === "review" ? `Chance of hate is ${pct(p[0])}, at or above the review bar of ${pct(TH.t_review)}.`
+    : triage === "nudge" ? `Chance of hate is ${pct(p[0])}, below the review bar of ${pct(TH.t_review)}, and chance of offensive is ${pct(p[1])}, above the nudge bar of ${pct(TH.t_nudge)}.`
+    : `Chance of hate is ${pct(p[0])}, below the review bar of ${pct(TH.t_review)}, and chance of offensive is ${pct(p[1])}, below the nudge bar of ${pct(TH.t_nudge)}.`;
+  const act = { allow: "Allow", nudge: "Ask author to reconsider", review: "Send to a person", remove: "Remove" };
+  return `<h2>Decide what happens</h2>
+    <p class="explain">A label is not a decision. The platform's policy decides what to do with it, and the same model can be used in very different ways. The original 2017-style model labelled this post <strong>${esc(ex.original_label)}</strong>.</p>
+    <div class="policies">
+      <div class="policy"><h3>Auto-remove hate</h3><p class="rule">Remove whatever the model labels hate.</p>
+        <span class="pill ${ex.auto_remove}">${act[ex.auto_remove]}</span>
+        <p class="why">The model's label is ${esc(ex.label)}.</p></div>
+      <div class="policy"><h3>Remove anything flagged</h3><p class="rule">Remove anything most likely hate or offensive.</p>
+        <span class="pill ${flagged ? "remove" : "allow"}">${flagged ? "Remove" : "Allow"}</span>
+        <p class="why">Most likely label: ${CLASSES[argmax(p)]} (${pct(Math.max(...p))}).</p></div>
+      <div class="policy recommended"><span class="tag">Safer design</span><h3>Triage</h3><p class="rule">The model never removes on its own: its best precision on hate is ${pct(TH.best_hate_precision)}, below the 80% bar. The riskiest posts go to a person (about 10% of posts); clearly offensive ones get a nudge.</p>
+        <span class="pill ${triage}">${act[triage]}</span>
+        <p class="why">${triageWhy}</p></div>
+    </div>`;
+}
+
+function renderStage(ex) {
+  const fn = [stageClean, stageSplit, stageWeigh, stageAdd, stageDecide][state.stage];
+  document.getElementById("stage").innerHTML = fn(ex);
+  document.getElementById("stage").setAttribute("aria-label", STAGES[state.stage][0]);
+}
+function renderTakeaway(ex) {
+  document.getElementById("takeaway").innerHTML = `<h3>What this post shows</h3><p>${ex.takeaway}</p>`;
+}
+function renderFacts() {
+  document.getElementById("facts").innerHTML = DATA.facts.map(f => `<div class="fact"><div class="big">${f.big}</div><p>${f.text}</p></div>`).join("");
+}
+function render() {
+  const ex = DATA.examples[state.ex];
+  if (state.word !== null && !ex.words[state.word]) state.word = null;
+  document.querySelectorAll(".pick").forEach(b => b.setAttribute("aria-pressed", String(+b.dataset.ex === state.ex)));
+  renderPost(ex); renderTabs(); renderStage(ex); renderTakeaway(ex);
+}
+document.getElementById("back").addEventListener("click", () => { if (state.stage > 0) { state.stage--; save(); render(); } });
+document.getElementById("next").addEventListener("click", () => {
+  if (state.stage < STAGES.length - 1) state.stage++;
+  else { state.ex = (state.ex + 1) % DATA.examples.length; state.stage = 0; state.word = null; }
+  save(); render();
+});
+renderPicker(); renderFacts(); render();
+</script>
+
+</body>
+</html>

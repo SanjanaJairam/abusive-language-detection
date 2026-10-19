@@ -1,0 +1,3625 @@
+{
+ "examples": [
+  {
+   "raw": "Had a great day at the beach with my family",
+   "clean": "had a great day at the beach with my family",
+   "tokens": [
+    "had",
+    "great",
+    "day",
+    "at",
+    "the",
+    "beach",
+    "with",
+    "my",
+    "family"
+   ],
+   "words": [
+    {
+     "text": "had",
+     "push": [
+      -0.379,
+      0.13,
+      0.25
+     ],
+     "pieces": [
+      {
+       "kind": "word",
+       "text": "had",
+       "push": [
+        -0.114,
+        -0.052,
+        0.166
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7h",
+       "push": [
+        0.009,
+        0.061,
+        -0.07
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "ad\u00b7",
+       "push": [
+        -0.055,
+        0.031,
+        0.025
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "had\u00b7",
+       "push": [
+        -0.045,
+        0.032,
+        0.013
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "had",
+       "push": [
+        -0.028,
+        -0.011,
+        0.039
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "ad",
+       "push": [
+        -0.037,
+        0.02,
+        0.017
+       ]
+      }
+     ]
+    },
+    {
+     "text": "a",
+     "push": [
+      0.021,
+      0.199,
+      -0.22
+     ],
+     "pieces": [
+      {
+       "kind": "chunk",
+       "text": "\u00b7a\u00b7",
+       "push": [
+        0.015,
+        0.104,
+        -0.119
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "a\u00b7",
+       "push": [
+        -0.007,
+        0.071,
+        -0.064
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7a",
+       "push": [
+        0.013,
+        0.024,
+        -0.037
+       ]
+      }
+     ]
+    },
+    {
+     "text": "great",
+     "push": [
+      -0.626,
+      -0.129,
+      0.755
+     ],
+     "pieces": [
+      {
+       "kind": "word",
+       "text": "great",
+       "push": [
+        -0.102,
+        0.046,
+        0.056
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "reat",
+       "push": [
+        -0.054,
+        -0.034,
+        0.088
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "reat\u00b7",
+       "push": [
+        -0.044,
+        -0.033,
+        0.077
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "great",
+       "push": [
+        -0.038,
+        -0.035,
+        0.073
+       ]
+      },
+      {
+       "kind": "pair",
+       "text": "great day",
+       "push": [
+        -0.021,
+        -0.05,
+        0.071
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "eat",
+       "push": [
+        -0.064,
+        0.022,
+        0.042
+       ]
+      }
+     ]
+    },
+    {
+     "text": "day",
+     "push": [
+      0.163,
+      -0.281,
+      0.118
+     ],
+     "pieces": [
+      {
+       "kind": "word",
+       "text": "day",
+       "push": [
+        0.164,
+        -0.242,
+        0.078
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "day\u00b7",
+       "push": [
+        -0.048,
+        0.059,
+        -0.011
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7day\u00b7",
+       "push": [
+        -0.016,
+        -0.031,
+        0.047
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "ay\u00b7",
+       "push": [
+        0.047,
+        -0.034,
+        -0.013
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "ay",
+       "push": [
+        0.028,
+        -0.046,
+        0.018
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7d",
+       "push": [
+        -0.009,
+        0.044,
+        -0.035
+       ]
+      }
+     ]
+    },
+    {
+     "text": "at",
+     "push": [
+      0.17,
+      -0.002,
+      -0.168
+     ],
+     "pieces": [
+      {
+       "kind": "word",
+       "text": "at",
+       "push": [
+        0.13,
+        -0.036,
+        -0.095
+       ]
+      },
+      {
+       "kind": "pair",
+       "text": "at the",
+       "push": [
+        0.016,
+        -0.085,
+        0.069
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7a",
+       "push": [
+        0.013,
+        0.024,
+        -0.037
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "t\u00b7",
+       "push": [
+        0.018,
+        0.01,
+        -0.028
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7at",
+       "push": [
+        0.015,
+        0.009,
+        -0.023
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7at\u00b7",
+       "push": [
+        -0.007,
+        0.023,
+        -0.016
+       ]
+      }
+     ]
+    },
+    {
+     "text": "the",
+     "push": [
+      0.022,
+      0.001,
+      -0.023
+     ],
+     "pieces": [
+      {
+       "kind": "word",
+       "text": "the",
+       "push": [
+        -0.077,
+        -0.041,
+        0.118
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "the",
+       "push": [
+        0.023,
+        0.01,
+        -0.033
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7the",
+       "push": [
+        0.03,
+        0.001,
+        -0.031
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7the\u00b7",
+       "push": [
+        -0.005,
+        0.029,
+        -0.024
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7th",
+       "push": [
+        0.024,
+        0.005,
+        -0.028
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "he\u00b7",
+       "push": [
+        -0.025,
+        -0.001,
+        0.026
+       ]
+      }
+     ]
+    },
+    {
+     "text": "beach",
+     "push": [
+      0.283,
+      0.132,
+      -0.414
+     ],
+     "pieces": [
+      {
+       "kind": "chunk",
+       "text": "ch\u00b7",
+       "push": [
+        0.074,
+        0.069,
+        -0.143
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "ch",
+       "push": [
+        0.059,
+        0.038,
+        -0.097
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "ac",
+       "push": [
+        0.092,
+        -0.062,
+        -0.031
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "ach",
+       "push": [
+        0.05,
+        -0.089,
+        0.039
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "each\u00b7",
+       "push": [
+        -0.015,
+        0.08,
+        -0.065
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7bea",
+       "push": [
+        0.072,
+        -0.057,
+        -0.016
+       ]
+      }
+     ]
+    },
+    {
+     "text": "with",
+     "push": [
+      -0.2,
+      0.261,
+      -0.061
+     ],
+     "pieces": [
+      {
+       "kind": "pair",
+       "text": "with my",
+       "push": [
+        -0.018,
+        0.151,
+        -0.133
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "it",
+       "push": [
+        0.021,
+        0.061,
+        -0.082
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7wi",
+       "push": [
+        -0.049,
+        0.03,
+        0.02
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "h\u00b7",
+       "push": [
+        0.014,
+        0.033,
+        -0.046
+       ]
+      },
+      {
+       "kind": "word",
+       "text": "with",
+       "push": [
+        0.039,
+        -0.042,
+        0.003
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "th\u00b7",
+       "push": [
+        -0.041,
+        0.005,
+        0.036
+       ]
+      }
+     ]
+    },
+    {
+     "text": "my",
+     "push": [
+      -0.12,
+      0.246,
+      -0.126
+     ],
+     "pieces": [
+      {
+       "kind": "pair",
+       "text": "my family",
+       "push": [
+        -0.073,
+        -0.113,
+        0.186
+       ]
+      },
+      {
+       "kind": "word",
+       "text": "my",
+       "push": [
+        -0.072,
+        0.129,
+        -0.057
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7my",
+       "push": [
+        0.0,
+        0.034,
+        -0.034
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7my\u00b7",
+       "push": [
+        0.01,
+        0.017,
+        -0.027
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "my\u00b7",
+       "push": [
+        -0.007,
+        0.023,
+        -0.016
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "y\u00b7",
+       "push": [
+        0.01,
+        0.007,
+        -0.017
+       ]
+      }
+     ]
+    },
+    {
+     "text": "family",
+     "push": [
+      0.345,
+      -0.35,
+      0.005
+     ],
+     "pieces": [
+      {
+       "kind": "chunk",
+       "text": "\u00b7fa",
+       "push": [
+        0.152,
+        0.027,
+        -0.179
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "fa",
+       "push": [
+        0.089,
+        0.014,
+        -0.103
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7f",
+       "push": [
+        0.04,
+        0.063,
+        -0.103
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "mil",
+       "push": [
+        -0.002,
+        -0.071,
+        0.073
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "ami",
+       "push": [
+        0.005,
+        -0.067,
+        0.062
+       ]
+      },
+      {
+       "kind": "word",
+       "text": "family",
+       "push": [
+        0.03,
+        0.028,
+        -0.058
+       ]
+      }
+     ]
+    }
+   ],
+   "start": [
+    -2.145,
+    0.171,
+    1.974
+   ],
+   "features": {
+    "word": 9,
+    "pair": 4,
+    "chunk": 108
+   },
+   "raw_probs": [
+    0.009,
+    0.151,
+    0.84
+   ],
+   "probs": [
+    0.01,
+    0.28,
+    0.71
+   ],
+   "label": "neither",
+   "original_label": "neither",
+   "triage": "allow",
+   "auto_remove": "allow",
+   "check": 0.0
+  },
+  {
+   "raw": "this damn printer jammed again",
+   "clean": "this damn printer jammed again",
+   "tokens": [
+    "this",
+    "damn",
+    "printer",
+    "jammed",
+    "again"
+   ],
+   "words": [
+    {
+     "text": "this",
+     "push": [
+      -0.081,
+      0.297,
+      -0.215
+     ],
+     "pieces": [
+      {
+       "kind": "pair",
+       "text": "this damn",
+       "push": [
+        -0.018,
+        0.23,
+        -0.212
+       ]
+      },
+      {
+       "kind": "word",
+       "text": "this",
+       "push": [
+        -0.064,
+        0.039,
+        0.024
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "hi",
+       "push": [
+        0.053,
+        0.007,
+        -0.061
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "his\u00b7",
+       "push": [
+        -0.022,
+        0.052,
+        -0.03
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "this\u00b7",
+       "push": [
+        -0.039,
+        0.051,
+        -0.012
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7thi",
+       "push": [
+        -0.007,
+        -0.023,
+        0.031
+       ]
+      }
+     ]
+    },
+    {
+     "text": "damn",
+     "push": [
+      0.124,
+      1.282,
+      -1.405
+     ],
+     "pieces": [
+      {
+       "kind": "word",
+       "text": "damn",
+       "push": [
+        -0.096,
+        0.546,
+        -0.449
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "damn",
+       "push": [
+        0.024,
+        0.084,
+        -0.108
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "amn",
+       "push": [
+        0.028,
+        0.078,
+        -0.106
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7damn",
+       "push": [
+        0.018,
+        0.088,
+        -0.106
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "damn\u00b7",
+       "push": [
+        0.024,
+        0.068,
+        -0.092
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "amn\u00b7",
+       "push": [
+        0.021,
+        0.066,
+        -0.087
+       ]
+      }
+     ]
+    },
+    {
+     "text": "printer",
+     "push": [
+      -0.256,
+      0.249,
+      0.007
+     ],
+     "pieces": [
+      {
+       "kind": "chunk",
+       "text": "ter\u00b7",
+       "push": [
+        -0.098,
+        0.078,
+        0.02
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "rin",
+       "push": [
+        -0.01,
+        0.077,
+        -0.067
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "nter\u00b7",
+       "push": [
+        -0.055,
+        0.01,
+        0.045
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "nter",
+       "push": [
+        0.034,
+        -0.051,
+        0.017
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "print",
+       "push": [
+        -0.008,
+        0.042,
+        -0.034
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "rint",
+       "push": [
+        -0.008,
+        0.042,
+        -0.034
+       ]
+      }
+     ]
+    },
+    {
+     "text": "jammed",
+     "push": [
+      0.06,
+      -0.226,
+      0.167
+     ],
+     "pieces": [
+      {
+       "kind": "chunk",
+       "text": "med\u00b7",
+       "push": [
+        0.052,
+        -0.095,
+        0.043
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "jam",
+       "push": [
+        0.07,
+        -0.038,
+        -0.032
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "amme",
+       "push": [
+        -0.059,
+        0.015,
+        0.044
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7jamm",
+       "push": [
+        -0.041,
+        -0.017,
+        0.057
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "jamm",
+       "push": [
+        -0.041,
+        -0.017,
+        0.057
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "mm",
+       "push": [
+        -0.017,
+        0.057,
+        -0.04
+       ]
+      }
+     ]
+    },
+    {
+     "text": "again",
+     "push": [
+      -0.175,
+      0.384,
+      -0.209
+     ],
+     "pieces": [
+      {
+       "kind": "word",
+       "text": "again",
+       "push": [
+        -0.243,
+        0.406,
+        -0.163
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "ag",
+       "push": [
+        0.145,
+        -0.033,
+        -0.112
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "aga",
+       "push": [
+        -0.064,
+        -0.001,
+        0.066
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "ga",
+       "push": [
+        0.05,
+        0.011,
+        -0.061
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "in\u00b7",
+       "push": [
+        0.052,
+        -0.017,
+        -0.035
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7a",
+       "push": [
+        0.014,
+        0.026,
+        -0.041
+       ]
+      }
+     ]
+    }
+   ],
+   "start": [
+    -2.145,
+    0.171,
+    1.974
+   ],
+   "features": {
+    "word": 3,
+    "pair": 1,
+    "chunk": 90
+   },
+   "raw_probs": [
+    0.008,
+    0.856,
+    0.136
+   ],
+   "probs": [
+    0.011,
+    0.8,
+    0.19
+   ],
+   "label": "offensive",
+   "original_label": "neither",
+   "triage": "nudge",
+   "auto_remove": "allow",
+   "check": 0.0
+  },
+  {
+   "raw": "I hate immigrants",
+   "clean": "i hate immigrants",
+   "tokens": [
+    "hate",
+    "immigrants"
+   ],
+   "words": [
+    {
+     "text": "i",
+     "push": [
+      0.092,
+      0.023,
+      -0.114
+     ],
+     "pieces": [
+      {
+       "kind": "chunk",
+       "text": "\u00b7i\u00b7",
+       "push": [
+        0.059,
+        0.005,
+        -0.064
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "i\u00b7",
+       "push": [
+        0.01,
+        0.016,
+        -0.027
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7i",
+       "push": [
+        0.022,
+        0.001,
+        -0.023
+       ]
+      }
+     ]
+    },
+    {
+     "text": "hate",
+     "push": [
+      1.651,
+      -0.144,
+      -1.507
+     ],
+     "pieces": [
+      {
+       "kind": "word",
+       "text": "hate",
+       "push": [
+        0.925,
+        -0.22,
+        -0.704
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7hat",
+       "push": [
+        0.164,
+        -0.022,
+        -0.142
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7hate",
+       "push": [
+        0.132,
+        0.02,
+        -0.152
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "hate",
+       "push": [
+        0.125,
+        0.024,
+        -0.149
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "hate\u00b7",
+       "push": [
+        0.13,
+        -0.034,
+        -0.097
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7h",
+       "push": [
+        0.011,
+        0.073,
+        -0.085
+       ]
+      }
+     ]
+    },
+    {
+     "text": "immigrants",
+     "push": [
+      -0.546,
+      1.779,
+      -1.233
+     ],
+     "pieces": [
+      {
+       "kind": "word",
+       "text": "immigrants",
+       "push": [
+        -0.08,
+        0.281,
+        -0.201
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "ig",
+       "push": [
+        0.132,
+        0.051,
+        -0.183
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "rant",
+       "push": [
+        0.043,
+        0.127,
+        -0.17
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "mmi",
+       "push": [
+        -0.074,
+        0.092,
+        -0.018
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "immi",
+       "push": [
+        -0.029,
+        0.089,
+        -0.06
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "gra",
+       "push": [
+        -0.081,
+        0.037,
+        0.044
+       ]
+      }
+     ]
+    }
+   ],
+   "start": [
+    -2.145,
+    0.171,
+    1.974
+   ],
+   "features": {
+    "word": 2,
+    "pair": 0,
+    "chunk": 54
+   },
+   "raw_probs": [
+    0.055,
+    0.886,
+    0.059
+   ],
+   "probs": [
+    0.036,
+    0.911,
+    0.053
+   ],
+   "label": "offensive",
+   "original_label": "offensive",
+   "triage": "nudge",
+   "auto_remove": "allow",
+   "check": 0.0
+  },
+  {
+   "raw": "I don't hate immigrants",
+   "clean": "i don't hate immigrants",
+   "tokens": [
+    "don't",
+    "neg_hate",
+    "neg_immigrants"
+   ],
+   "words": [
+    {
+     "text": "i",
+     "push": [
+      0.086,
+      0.021,
+      -0.107
+     ],
+     "pieces": [
+      {
+       "kind": "chunk",
+       "text": "\u00b7i\u00b7",
+       "push": [
+        0.055,
+        0.005,
+        -0.06
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "i\u00b7",
+       "push": [
+        0.01,
+        0.015,
+        -0.025
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7i",
+       "push": [
+        0.021,
+        0.001,
+        -0.022
+       ]
+      }
+     ]
+    },
+    {
+     "text": "don't",
+     "push": [
+      -0.048,
+      0.365,
+      -0.317
+     ],
+     "pieces": [
+      {
+       "kind": "pair",
+       "text": "don't neg_hate",
+       "push": [
+        -0.203,
+        0.451,
+        -0.249
+       ]
+      },
+      {
+       "kind": "word",
+       "text": "don't",
+       "push": [
+        -0.132,
+        0.119,
+        0.014
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7don",
+       "push": [
+        0.06,
+        -0.01,
+        -0.05
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "don",
+       "push": [
+        0.054,
+        -0.001,
+        -0.053
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7d",
+       "push": [
+        -0.01,
+        0.05,
+        -0.04
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "t\u00b7",
+       "push": [
+        0.024,
+        0.014,
+        -0.037
+       ]
+      }
+     ]
+    },
+    {
+     "text": "hate",
+     "push": [
+      0.318,
+      1.033,
+      -1.351
+     ],
+     "pieces": [
+      {
+       "kind": "word",
+       "text": "neg_hate",
+       "push": [
+        -0.262,
+        0.737,
+        -0.475
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7hat",
+       "push": [
+        0.154,
+        -0.021,
+        -0.133
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7hate",
+       "push": [
+        0.124,
+        0.019,
+        -0.143
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "hate",
+       "push": [
+        0.118,
+        0.022,
+        -0.14
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "hate\u00b7",
+       "push": [
+        0.122,
+        -0.031,
+        -0.09
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7h",
+       "push": [
+        0.011,
+        0.069,
+        -0.079
+       ]
+      }
+     ]
+    },
+    {
+     "text": "immigrants",
+     "push": [
+      -0.437,
+      1.404,
+      -0.967
+     ],
+     "pieces": [
+      {
+       "kind": "chunk",
+       "text": "ig",
+       "push": [
+        0.124,
+        0.047,
+        -0.171
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "rant",
+       "push": [
+        0.04,
+        0.119,
+        -0.159
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "mmi",
+       "push": [
+        -0.07,
+        0.087,
+        -0.017
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "immi",
+       "push": [
+        -0.027,
+        0.083,
+        -0.056
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "gra",
+       "push": [
+        -0.076,
+        0.035,
+        0.042
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7immi",
+       "push": [
+        -0.026,
+        0.076,
+        -0.05
+       ]
+      }
+     ]
+    }
+   ],
+   "start": [
+    -2.145,
+    0.171,
+    1.974
+   ],
+   "features": {
+    "word": 2,
+    "pair": 1,
+    "chunk": 72
+   },
+   "raw_probs": [
+    0.005,
+    0.972,
+    0.023
+   ],
+   "probs": [
+    0.013,
+    0.937,
+    0.05
+   ],
+   "label": "offensive",
+   "original_label": "offensive",
+   "triage": "nudge",
+   "auto_remove": "allow",
+   "check": 0.0
+  },
+  {
+   "raw": "Immigrants are a plague on this country",
+   "clean": "immigrants are a plague on this country",
+   "tokens": [
+    "immigrants",
+    "are",
+    "plague",
+    "on",
+    "this",
+    "country"
+   ],
+   "words": [
+    {
+     "text": "immigrants",
+     "push": [
+      -0.354,
+      1.263,
+      -0.909
+     ],
+     "pieces": [
+      {
+       "kind": "pair",
+       "text": "immigrants are",
+       "push": [
+        -0.003,
+        0.216,
+        -0.213
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "ig",
+       "push": [
+        0.092,
+        0.035,
+        -0.127
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "rant",
+       "push": [
+        0.03,
+        0.089,
+        -0.119
+       ]
+      },
+      {
+       "kind": "word",
+       "text": "immigrants",
+       "push": [
+        -0.033,
+        0.115,
+        -0.082
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "mmi",
+       "push": [
+        -0.052,
+        0.065,
+        -0.013
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "immi",
+       "push": [
+        -0.02,
+        0.062,
+        -0.042
+       ]
+      }
+     ]
+    },
+    {
+     "text": "are",
+     "push": [
+      0.016,
+      0.137,
+      -0.153
+     ],
+     "pieces": [
+      {
+       "kind": "word",
+       "text": "are",
+       "push": [
+        0.077,
+        -0.014,
+        -0.063
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "are",
+       "push": [
+        -0.037,
+        0.003,
+        0.035
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7a",
+       "push": [
+        0.011,
+        0.02,
+        -0.031
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "are\u00b7",
+       "push": [
+        -0.023,
+        0.025,
+        -0.002
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "re",
+       "push": [
+        -0.002,
+        -0.015,
+        0.017
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "e\u00b7",
+       "push": [
+        0.012,
+        -0.002,
+        -0.01
+       ]
+      }
+     ]
+    },
+    {
+     "text": "a",
+     "push": [
+      0.018,
+      0.168,
+      -0.185
+     ],
+     "pieces": [
+      {
+       "kind": "chunk",
+       "text": "\u00b7a\u00b7",
+       "push": [
+        0.013,
+        0.088,
+        -0.1
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "a\u00b7",
+       "push": [
+        -0.006,
+        0.06,
+        -0.054
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7a",
+       "push": [
+        0.011,
+        0.02,
+        -0.031
+       ]
+      }
+     ]
+    },
+    {
+     "text": "plague",
+     "push": [
+      0.093,
+      0.234,
+      -0.327
+     ],
+     "pieces": [
+      {
+       "kind": "word",
+       "text": "plague",
+       "push": [
+        -0.002,
+        0.136,
+        -0.135
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "ag",
+       "push": [
+        0.132,
+        -0.03,
+        -0.102
+       ]
+      },
+      {
+       "kind": "pair",
+       "text": "plague on",
+       "push": [
+        -0.001,
+        0.065,
+        -0.063
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "lag",
+       "push": [
+        -0.039,
+        -0.008,
+        0.047
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "gue",
+       "push": [
+        -0.035,
+        0.029,
+        0.006
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "lague",
+       "push": [
+        -0.0,
+        0.035,
+        -0.034
+       ]
+      }
+     ]
+    },
+    {
+     "text": "on",
+     "push": [
+      0.039,
+      -0.073,
+      0.034
+     ],
+     "pieces": [
+      {
+       "kind": "pair",
+       "text": "on this",
+       "push": [
+        0.073,
+        -0.089,
+        0.016
+       ]
+      },
+      {
+       "kind": "word",
+       "text": "on",
+       "push": [
+        -0.072,
+        0.001,
+        0.072
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "on\u00b7",
+       "push": [
+        0.032,
+        -0.014,
+        -0.019
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "n\u00b7",
+       "push": [
+        0.029,
+        0.002,
+        -0.031
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "on",
+       "push": [
+        0.011,
+        -0.024,
+        0.013
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7on\u00b7",
+       "push": [
+        -0.01,
+        -0.01,
+        0.019
+       ]
+      }
+     ]
+    },
+    {
+     "text": "this",
+     "push": [
+      0.105,
+      0.027,
+      -0.132
+     ],
+     "pieces": [
+      {
+       "kind": "pair",
+       "text": "this country",
+       "push": [
+        0.227,
+        -0.156,
+        -0.071
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "hi",
+       "push": [
+        0.049,
+        0.007,
+        -0.055
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "his\u00b7",
+       "push": [
+        -0.02,
+        0.047,
+        -0.027
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "this\u00b7",
+       "push": [
+        -0.035,
+        0.046,
+        -0.011
+       ]
+      },
+      {
+       "kind": "word",
+       "text": "this",
+       "push": [
+        -0.037,
+        0.023,
+        0.014
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7thi",
+       "push": [
+        -0.007,
+        -0.021,
+        0.028
+       ]
+      }
+     ]
+    },
+    {
+     "text": "country",
+     "push": [
+      0.957,
+      -0.223,
+      -0.734
+     ],
+     "pieces": [
+      {
+       "kind": "word",
+       "text": "country",
+       "push": [
+        0.339,
+        -0.096,
+        -0.243
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "unt",
+       "push": [
+        0.078,
+        0.04,
+        -0.118
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "ntry\u00b7",
+       "push": [
+        0.053,
+        -0.027,
+        -0.026
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "try\u00b7",
+       "push": [
+        0.05,
+        0.002,
+        -0.051
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "ry\u00b7",
+       "push": [
+        0.045,
+        -0.015,
+        -0.031
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "untry",
+       "push": [
+        0.044,
+        -0.001,
+        -0.042
+       ]
+      }
+     ]
+    }
+   ],
+   "start": [
+    -2.145,
+    0.171,
+    1.974
+   ],
+   "features": {
+    "word": 6,
+    "pair": 4,
+    "chunk": 115
+   },
+   "raw_probs": [
+    0.044,
+    0.855,
+    0.101
+   ],
+   "probs": [
+    0.03,
+    0.875,
+    0.096
+   ],
+   "label": "offensive",
+   "original_label": "neither",
+   "triage": "nudge",
+   "auto_remove": "allow",
+   "check": 0.0
+  },
+  {
+   "raw": "I am a queer person",
+   "clean": "i am a queer person",
+   "tokens": [
+    "am",
+    "queer",
+    "person"
+   ],
+   "words": [
+    {
+     "text": "i",
+     "push": [
+      0.108,
+      0.026,
+      -0.133
+     ],
+     "pieces": [
+      {
+       "kind": "chunk",
+       "text": "\u00b7i\u00b7",
+       "push": [
+        0.067,
+        0.006,
+        -0.072
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7i",
+       "push": [
+        0.029,
+        0.002,
+        -0.031
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "i\u00b7",
+       "push": [
+        0.012,
+        0.019,
+        -0.03
+       ]
+      }
+     ]
+    },
+    {
+     "text": "am",
+     "push": [
+      -0.439,
+      -0.067,
+      0.506
+     ],
+     "pieces": [
+      {
+       "kind": "word",
+       "text": "am",
+       "push": [
+        -0.417,
+        0.094,
+        0.323
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "am\u00b7",
+       "push": [
+        -0.096,
+        -0.001,
+        0.097
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7am",
+       "push": [
+        0.039,
+        -0.094,
+        0.055
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7am\u00b7",
+       "push": [
+        0.058,
+        -0.079,
+        0.021
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "am",
+       "push": [
+        -0.05,
+        -0.007,
+        0.057
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7a",
+       "push": [
+        0.018,
+        0.033,
+        -0.051
+       ]
+      }
+     ]
+    },
+    {
+     "text": "a",
+     "push": [
+      0.029,
+      0.271,
+      -0.299
+     ],
+     "pieces": [
+      {
+       "kind": "chunk",
+       "text": "\u00b7a\u00b7",
+       "push": [
+        0.02,
+        0.141,
+        -0.162
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "a\u00b7",
+       "push": [
+        -0.01,
+        0.097,
+        -0.087
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7a",
+       "push": [
+        0.018,
+        0.033,
+        -0.051
+       ]
+      }
+     ]
+    },
+    {
+     "text": "queer",
+     "push": [
+      3.027,
+      0.078,
+      -3.105
+     ],
+     "pieces": [
+      {
+       "kind": "word",
+       "text": "queer",
+       "push": [
+        0.324,
+        0.572,
+        -0.896
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "queer",
+       "push": [
+        0.394,
+        -0.056,
+        -0.338
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "ueer",
+       "push": [
+        0.392,
+        -0.046,
+        -0.347
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7quee",
+       "push": [
+        0.336,
+        -0.04,
+        -0.296
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "quee",
+       "push": [
+        0.314,
+        -0.025,
+        -0.29
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "uee",
+       "push": [
+        0.312,
+        -0.014,
+        -0.297
+       ]
+      }
+     ]
+    },
+    {
+     "text": "person",
+     "push": [
+      0.923,
+      -0.854,
+      -0.07
+     ],
+     "pieces": [
+      {
+       "kind": "word",
+       "text": "person",
+       "push": [
+        0.354,
+        -0.444,
+        0.089
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "rson\u00b7",
+       "push": [
+        0.069,
+        -0.151,
+        0.083
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "per",
+       "push": [
+        -0.026,
+        -0.089,
+        0.115
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "ers",
+       "push": [
+        0.106,
+        -0.058,
+        -0.048
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "son\u00b7",
+       "push": [
+        0.098,
+        -0.066,
+        -0.033
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7pe",
+       "push": [
+        -0.018,
+        0.067,
+        -0.049
+       ]
+      }
+     ]
+    }
+   ],
+   "start": [
+    -2.145,
+    0.171,
+    1.974
+   ],
+   "features": {
+    "word": 3,
+    "pair": 0,
+    "chunk": 50
+   },
+   "raw_probs": [
+    0.816,
+    0.125,
+    0.059
+   ],
+   "probs": [
+    0.449,
+    0.449,
+    0.102
+   ],
+   "label": "hate",
+   "original_label": "offensive",
+   "triage": "review",
+   "auto_remove": "remove",
+   "check": 0.0
+  },
+  {
+   "raw": "Saying immigrants are animals is disgusting and wrong",
+   "clean": "saying immigrants are animals is disgusting and wrong",
+   "tokens": [
+    "saying",
+    "immigrants",
+    "are",
+    "animals",
+    "is",
+    "disgusting",
+    "and",
+    "wrong"
+   ],
+   "words": [
+    {
+     "text": "saying",
+     "push": [
+      -0.27,
+      0.241,
+      0.029
+     ],
+     "pieces": [
+      {
+       "kind": "word",
+       "text": "saying",
+       "push": [
+        -0.177,
+        0.153,
+        0.024
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "aying",
+       "push": [
+        -0.045,
+        0.034,
+        0.011
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "ay",
+       "push": [
+        0.02,
+        -0.033,
+        0.013
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "ayi",
+       "push": [
+        -0.014,
+        0.021,
+        -0.007
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "ayin",
+       "push": [
+        -0.013,
+        0.02,
+        -0.007
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "ing",
+       "push": [
+        -0.019,
+        0.008,
+        0.011
+       ]
+      }
+     ]
+    },
+    {
+     "text": "immigrants",
+     "push": [
+      -0.308,
+      1.083,
+      -0.775
+     ],
+     "pieces": [
+      {
+       "kind": "pair",
+       "text": "immigrants are",
+       "push": [
+        -0.003,
+        0.197,
+        -0.194
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "ig",
+       "push": [
+        0.078,
+        0.03,
+        -0.108
+       ]
+      },
+      {
+       "kind": "word",
+       "text": "immigrants",
+       "push": [
+        -0.03,
+        0.105,
+        -0.075
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "rant",
+       "push": [
+        0.025,
+        0.075,
+        -0.1
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "mmi",
+       "push": [
+        -0.044,
+        0.055,
+        -0.011
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "immi",
+       "push": [
+        -0.017,
+        0.052,
+        -0.035
+       ]
+      }
+     ]
+    },
+    {
+     "text": "are",
+     "push": [
+      0.019,
+      0.119,
+      -0.137
+     ],
+     "pieces": [
+      {
+       "kind": "word",
+       "text": "are",
+       "push": [
+        0.07,
+        -0.012,
+        -0.057
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "are",
+       "push": [
+        -0.032,
+        0.002,
+        0.029
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7a",
+       "push": [
+        0.008,
+        0.014,
+        -0.022
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "are\u00b7",
+       "push": [
+        -0.019,
+        0.021,
+        -0.002
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "re",
+       "push": [
+        -0.002,
+        -0.012,
+        0.014
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "e\u00b7",
+       "push": [
+        0.012,
+        -0.002,
+        -0.01
+       ]
+      }
+     ]
+    },
+    {
+     "text": "animals",
+     "push": [
+      0.099,
+      0.159,
+      -0.258
+     ],
+     "pieces": [
+      {
+       "kind": "word",
+       "text": "animals",
+       "push": [
+        0.248,
+        -0.05,
+        -0.198
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "ni",
+       "push": [
+        0.082,
+        -0.001,
+        -0.081
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "mal",
+       "push": [
+        -0.049,
+        0.071,
+        -0.022
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "als\u00b7",
+       "push": [
+        -0.056,
+        0.009,
+        0.046
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "mals\u00b7",
+       "push": [
+        0.05,
+        -0.02,
+        -0.03
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "als",
+       "push": [
+        -0.05,
+        0.024,
+        0.026
+       ]
+      }
+     ]
+    },
+    {
+     "text": "is",
+     "push": [
+      -0.037,
+      0.18,
+      -0.143
+     ],
+     "pieces": [
+      {
+       "kind": "pair",
+       "text": "is disgusting",
+       "push": [
+        -0.019,
+        0.249,
+        -0.23
+       ]
+      },
+      {
+       "kind": "word",
+       "text": "is",
+       "push": [
+        -0.011,
+        0.064,
+        -0.053
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7is",
+       "push": [
+        -0.002,
+        -0.022,
+        0.025
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7is\u00b7",
+       "push": [
+        -0.019,
+        0.004,
+        0.015
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "s\u00b7",
+       "push": [
+        0.004,
+        0.011,
+        -0.015
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7i",
+       "push": [
+        0.013,
+        0.001,
+        -0.014
+       ]
+      }
+     ]
+    },
+    {
+     "text": "disgusting",
+     "push": [
+      0.07,
+      1.437,
+      -1.507
+     ],
+     "pieces": [
+      {
+       "kind": "word",
+       "text": "disgusting",
+       "push": [
+        0.025,
+        0.444,
+        -0.469
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "sg",
+       "push": [
+        0.031,
+        0.064,
+        -0.095
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "gusti",
+       "push": [
+        0.004,
+        0.077,
+        -0.08
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "ustin",
+       "push": [
+        0.063,
+        0.014,
+        -0.077
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "gust",
+       "push": [
+        0.054,
+        0.018,
+        -0.073
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "isg",
+       "push": [
+        0.024,
+        0.048,
+        -0.072
+       ]
+      }
+     ]
+    },
+    {
+     "text": "and",
+     "push": [
+      -0.041,
+      -0.112,
+      0.153
+     ],
+     "pieces": [
+      {
+       "kind": "pair",
+       "text": "and wrong",
+       "push": [
+        -0.005,
+        -0.099,
+        0.104
+       ]
+      },
+      {
+       "kind": "word",
+       "text": "and",
+       "push": [
+        -0.021,
+        -0.059,
+        0.08
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7a",
+       "push": [
+        0.008,
+        0.014,
+        -0.022
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "nd",
+       "push": [
+        -0.015,
+        -0.0,
+        0.015
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7an",
+       "push": [
+        -0.011,
+        0.005,
+        0.006
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7and",
+       "push": [
+        -0.01,
+        -0.001,
+        0.011
+       ]
+      }
+     ]
+    },
+    {
+     "text": "wrong",
+     "push": [
+      0.062,
+      -0.174,
+      0.112
+     ],
+     "pieces": [
+      {
+       "kind": "word",
+       "text": "wrong",
+       "push": [
+        0.137,
+        -0.029,
+        -0.108
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "rong\u00b7",
+       "push": [
+        -0.017,
+        -0.025,
+        0.041
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "ro",
+       "push": [
+        -0.015,
+        0.032,
+        -0.017
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "ron",
+       "push": [
+        -0.028,
+        0.028,
+        0.001
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "wr",
+       "push": [
+        0.015,
+        -0.027,
+        0.012
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "rong",
+       "push": [
+        -0.001,
+        -0.024,
+        0.024
+       ]
+      }
+     ]
+    }
+   ],
+   "start": [
+    -2.145,
+    0.171,
+    1.974
+   ],
+   "features": {
+    "word": 8,
+    "pair": 4,
+    "chunk": 149
+   },
+   "raw_probs": [
+    0.003,
+    0.971,
+    0.025
+   ],
+   "probs": [
+    0.01,
+    0.925,
+    0.065
+   ],
+   "label": "offensive",
+   "original_label": "offensive",
+   "triage": "nudge",
+   "auto_remove": "allow",
+   "check": 0.0
+  },
+  {
+   "raw": "my brother be cooking for real tho",
+   "clean": "my brother be cooking for real tho",
+   "tokens": [
+    "my",
+    "brother",
+    "be",
+    "cooking",
+    "for",
+    "real",
+    "tho"
+   ],
+   "words": [
+    {
+     "text": "my",
+     "push": [
+      -0.214,
+      0.353,
+      -0.139
+     ],
+     "pieces": [
+      {
+       "kind": "pair",
+       "text": "my brother",
+       "push": [
+        -0.284,
+        0.211,
+        0.074
+       ]
+      },
+      {
+       "kind": "word",
+       "text": "my",
+       "push": [
+        -0.074,
+        0.133,
+        -0.059
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7my",
+       "push": [
+        0.0,
+        0.038,
+        -0.039
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7my\u00b7",
+       "push": [
+        0.011,
+        0.019,
+        -0.03
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "y\u00b7",
+       "push": [
+        0.016,
+        0.012,
+        -0.028
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "my\u00b7",
+       "push": [
+        -0.008,
+        0.026,
+        -0.018
+       ]
+      }
+     ]
+    },
+    {
+     "text": "brother",
+     "push": [
+      -0.186,
+      0.395,
+      -0.21
+     ],
+     "pieces": [
+      {
+       "kind": "word",
+       "text": "brother",
+       "push": [
+        -0.043,
+        0.073,
+        -0.031
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7br",
+       "push": [
+        -0.073,
+        0.033,
+        0.041
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "ot",
+       "push": [
+        0.011,
+        0.048,
+        -0.059
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "oth",
+       "push": [
+        0.029,
+        0.024,
+        -0.053
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7bro",
+       "push": [
+        -0.052,
+        0.044,
+        0.008
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "ro",
+       "push": [
+        -0.023,
+        0.051,
+        -0.027
+       ]
+      }
+     ]
+    },
+    {
+     "text": "be",
+     "push": [
+      0.073,
+      -0.01,
+      -0.063
+     ],
+     "pieces": [
+      {
+       "kind": "chunk",
+       "text": "\u00b7b",
+       "push": [
+        0.017,
+        0.024,
+        -0.042
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7be\u00b7",
+       "push": [
+        0.011,
+        -0.028,
+        0.017
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7be",
+       "push": [
+        0.021,
+        -0.001,
+        -0.02
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "e\u00b7",
+       "push": [
+        0.019,
+        -0.004,
+        -0.016
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "be",
+       "push": [
+        0.001,
+        0.008,
+        -0.009
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "be\u00b7",
+       "push": [
+        0.003,
+        -0.009,
+        0.006
+       ]
+      }
+     ]
+    },
+    {
+     "text": "cooking",
+     "push": [
+      0.301,
+      -0.045,
+      -0.257
+     ],
+     "pieces": [
+      {
+       "kind": "chunk",
+       "text": "\u00b7coo",
+       "push": [
+        0.159,
+        -0.092,
+        -0.067
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "coo",
+       "push": [
+        0.129,
+        -0.076,
+        -0.053
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "ki",
+       "push": [
+        0.058,
+        0.009,
+        -0.067
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "king\u00b7",
+       "push": [
+        0.063,
+        -0.037,
+        -0.026
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "king",
+       "push": [
+        0.058,
+        -0.032,
+        -0.027
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "kin",
+       "push": [
+        0.056,
+        -0.006,
+        -0.05
+       ]
+      }
+     ]
+    },
+    {
+     "text": "for",
+     "push": [
+      -0.191,
+      0.025,
+      0.165
+     ],
+     "pieces": [
+      {
+       "kind": "word",
+       "text": "for",
+       "push": [
+        -0.097,
+        -0.029,
+        0.126
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7f",
+       "push": [
+        0.045,
+        0.072,
+        -0.118
+       ]
+      },
+      {
+       "kind": "pair",
+       "text": "for real",
+       "push": [
+        -0.091,
+        0.036,
+        0.055
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "for",
+       "push": [
+        -0.032,
+        -0.007,
+        0.039
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7fo",
+       "push": [
+        0.019,
+        0.011,
+        -0.029
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "or\u00b7",
+       "push": [
+        -0.007,
+        -0.022,
+        0.029
+       ]
+      }
+     ]
+    },
+    {
+     "text": "real",
+     "push": [
+      -0.486,
+      0.448,
+      0.038
+     ],
+     "pieces": [
+      {
+       "kind": "word",
+       "text": "real",
+       "push": [
+        -0.252,
+        0.161,
+        0.091
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "real\u00b7",
+       "push": [
+        -0.073,
+        0.124,
+        -0.051
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "eal\u00b7",
+       "push": [
+        -0.05,
+        0.06,
+        -0.01
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "rea",
+       "push": [
+        -0.048,
+        -0.007,
+        0.055
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7re",
+       "push": [
+        0.048,
+        -0.045,
+        -0.003
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "ea",
+       "push": [
+        -0.047,
+        0.03,
+        0.017
+       ]
+      }
+     ]
+    },
+    {
+     "text": "tho",
+     "push": [
+      -0.002,
+      0.281,
+      -0.279
+     ],
+     "pieces": [
+      {
+       "kind": "word",
+       "text": "tho",
+       "push": [
+        -0.232,
+        0.088,
+        0.144
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "ho",
+       "push": [
+        0.071,
+        0.079,
+        -0.15
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "ho\u00b7",
+       "push": [
+        -0.016,
+        0.065,
+        -0.049
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7tho\u00b7",
+       "push": [
+        0.023,
+        0.032,
+        -0.054
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "tho\u00b7",
+       "push": [
+        0.022,
+        0.03,
+        -0.053
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "tho",
+       "push": [
+        0.038,
+        -0.04,
+        0.002
+       ]
+      }
+     ]
+    }
+   ],
+   "start": [
+    -2.145,
+    0.171,
+    1.974
+   ],
+   "features": {
+    "word": 7,
+    "pair": 3,
+    "chunk": 95
+   },
+   "raw_probs": [
+    0.007,
+    0.592,
+    0.401
+   ],
+   "probs": [
+    0.007,
+    0.591,
+    0.402
+   ],
+   "label": "offensive",
+   "original_label": "offensive",
+   "triage": "allow",
+   "auto_remove": "allow",
+   "check": 0.0
+  },
+  {
+   "raw": "I'm a proud Muslim woman",
+   "clean": "i'm a proud muslim woman",
+   "tokens": [
+    "i'm",
+    "proud",
+    "muslim",
+    "woman"
+   ],
+   "words": [
+    {
+     "text": "i'm",
+     "push": [
+      -0.298,
+      0.327,
+      -0.029
+     ],
+     "pieces": [
+      {
+       "kind": "word",
+       "text": "i'm",
+       "push": [
+        -0.133,
+        0.08,
+        0.053
+       ]
+      },
+      {
+       "kind": "pair",
+       "text": "i'm proud",
+       "push": [
+        -0.01,
+        0.08,
+        -0.07
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "'m",
+       "push": [
+        -0.042,
+        0.049,
+        -0.007
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "i'",
+       "push": [
+        -0.024,
+        0.043,
+        -0.019
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "i'm",
+       "push": [
+        -0.033,
+        0.041,
+        -0.008
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "'m\u00b7",
+       "push": [
+        -0.026,
+        0.033,
+        -0.007
+       ]
+      }
+     ]
+    },
+    {
+     "text": "a",
+     "push": [
+      0.025,
+      0.221,
+      -0.246
+     ],
+     "pieces": [
+      {
+       "kind": "chunk",
+       "text": "\u00b7a\u00b7",
+       "push": [
+        0.016,
+        0.113,
+        -0.129
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "a\u00b7",
+       "push": [
+        -0.008,
+        0.077,
+        -0.069
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7a",
+       "push": [
+        0.017,
+        0.031,
+        -0.048
+       ]
+      }
+     ]
+    },
+    {
+     "text": "proud",
+     "push": [
+      -0.076,
+      -0.322,
+      0.399
+     ],
+     "pieces": [
+      {
+       "kind": "word",
+       "text": "proud",
+       "push": [
+        -0.174,
+        -0.092,
+        0.266
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "oud\u00b7",
+       "push": [
+        0.051,
+        -0.103,
+        0.052
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "ud\u00b7",
+       "push": [
+        0.06,
+        -0.003,
+        -0.057
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "roud\u00b7",
+       "push": [
+        -0.011,
+        -0.044,
+        0.055
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "ro",
+       "push": [
+        -0.022,
+        0.048,
+        -0.026
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "roud",
+       "push": [
+        -0.018,
+        -0.028,
+        0.046
+       ]
+      }
+     ]
+    },
+    {
+     "text": "muslim",
+     "push": [
+      1.094,
+      -0.464,
+      -0.63
+     ],
+     "pieces": [
+      {
+       "kind": "word",
+       "text": "muslim",
+       "push": [
+        0.25,
+        -0.124,
+        -0.126
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "sli",
+       "push": [
+        0.108,
+        -0.058,
+        -0.05
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7musl",
+       "push": [
+        0.096,
+        -0.021,
+        -0.074
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "musl",
+       "push": [
+        0.089,
+        -0.031,
+        -0.058
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "musli",
+       "push": [
+        0.089,
+        -0.031,
+        -0.058
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "uslim",
+       "push": [
+        0.089,
+        -0.031,
+        -0.058
+       ]
+      }
+     ]
+    },
+    {
+     "text": "woman",
+     "push": [
+      -0.239,
+      0.372,
+      -0.134
+     ],
+     "pieces": [
+      {
+       "kind": "word",
+       "text": "woman",
+       "push": [
+        -0.077,
+        -0.025,
+        0.101
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "oma",
+       "push": [
+        0.039,
+        0.035,
+        -0.073
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7woma",
+       "push": [
+        -0.043,
+        0.063,
+        -0.02
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "\u00b7wom",
+       "push": [
+        -0.011,
+        0.057,
+        -0.046
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "oman",
+       "push": [
+        -0.011,
+        0.056,
+        -0.044
+       ]
+      },
+      {
+       "kind": "chunk",
+       "text": "ma",
+       "push": [
+        -0.051,
+        0.03,
+        0.021
+       ]
+      }
+     ]
+    }
+   ],
+   "start": [
+    -2.145,
+    0.171,
+    1.974
+   ],
+   "features": {
+    "word": 4,
+    "pair": 1,
+    "chunk": 70
+   },
+   "raw_probs": [
+    0.036,
+    0.254,
+    0.71
+   ],
+   "probs": [
+    0.024,
+    0.347,
+    0.63
+   ],
+   "label": "neither",
+   "original_label": "offensive",
+   "triage": "allow",
+   "auto_remove": "allow",
+   "check": 0.0
+  }
+ ],
+ "thresholds": {
+  "t_auto": null,
+  "t_review": 0.1338,
+  "t_nudge": 0.5957,
+  "target_precision": 0.8,
+  "best_hate_precision": 0.7692,
+  "review_budget": 0.1,
+  "nudge_precision": 0.95,
+  "everyday_nudge_rate": 0.05
+ }
+}

@@ -23,14 +23,17 @@ def _lowest_threshold(scores, is_positive, target_precision, min_support=20):
     return (float(scores[order][ok.max()]) if len(ok) else None), best
 
 
-def choose_thresholds(p_val, y_val, target_precision=0.80, review_budget=0.05, nudge_precision=0.95):
+def choose_thresholds(p_val, y_val, target_precision=0.80, review_budget=0.05, nudge_precision=0.95,
+                      p_everyday=None, everyday_nudge_rate=0.05):
     """Pick thresholds on validation data only.
 
     t_auto:   lowest hate score at which automatic removal is at least `target_precision` precise
               (None if the model never gets there: then nothing is removed without a person).
     t_review: lower bound of the human-review band, sized so about `review_budget` of posts are reviewed.
     t_nudge:  offensive score above which at least `nudge_precision` of nudged posts really are
-              offensive or hateful, so ordinary posts are rarely nudged.
+              offensive or hateful. Davidson's tweets are 77% offensive, so that bar alone is low;
+              with `p_everyday` (probabilities for ordinary posts, e.g. OLID tweets marked not
+              offensive) it is raised until at most `everyday_nudge_rate` of those posts are nudged.
     """
     p_hate, p_off = p_val[:, HATE], p_val[:, OFFENSIVE]
     t_auto, best_precision = _lowest_threshold(p_hate, y_val == HATE, target_precision)
@@ -40,8 +43,12 @@ def choose_thresholds(p_val, y_val, target_precision=0.80, review_budget=0.05, n
     t_review = float(np.sort(below)[::-1][min(n_review, len(below) - 1)])
 
     t_nudge, _ = _lowest_threshold(p_off, y_val != NEITHER, nudge_precision)
+    if p_everyday is not None:
+        everyday_bar = float(np.quantile(p_everyday[:, OFFENSIVE], 1 - everyday_nudge_rate))
+        t_nudge = everyday_bar if t_nudge is None else max(t_nudge, everyday_bar)
     return {"t_auto": t_auto, "t_review": t_review, "t_nudge": t_nudge, "target_precision": target_precision,
-            "best_hate_precision": best_precision, "review_budget": review_budget, "nudge_precision": nudge_precision}
+            "best_hate_precision": best_precision, "review_budget": review_budget, "nudge_precision": nudge_precision,
+            "everyday_nudge_rate": everyday_nudge_rate if p_everyday is not None else None}
 
 
 def remove_predicted_hate(pred):
@@ -71,11 +78,11 @@ def decide(probs, policy, th=None):
     return actions
 
 
-def review_budget_sweep(p_val, y_val, p_test, y_test, groups, budgets=(.01, .02, .05, .10, .15, .20)):
+def review_budget_sweep(p_val, y_val, p_test, y_test, groups, budgets=(.01, .02, .05, .10, .15, .20), p_everyday=None):
     """How much hate a triage policy catches as the human-review budget grows."""
     rows = []
     for b in budgets:
-        th = choose_thresholds(p_val, y_val, review_budget=b)
+        th = choose_thresholds(p_val, y_val, review_budget=b, p_everyday=p_everyday)
         o = outcomes(decide(p_test, "triage", th), y_test, groups)
         rows.append({"review_budget": b, **o})
     return rows

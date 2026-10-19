@@ -1350,20 +1350,22 @@
     "review_5": {
       "t_auto": null,
       "t_review": 0.2256,
-      "t_nudge": 0.3424,
+      "t_nudge": 0.5957,
       "target_precision": 0.8,
       "best_hate_precision": 0.7692,
       "review_budget": 0.05,
-      "nudge_precision": 0.95
+      "nudge_precision": 0.95,
+      "everyday_nudge_rate": 0.05
     },
     "review_10": {
       "t_auto": null,
       "t_review": 0.1338,
-      "t_nudge": 0.3424,
+      "t_nudge": 0.5957,
       "target_precision": 0.8,
       "best_hate_precision": 0.7692,
       "review_budget": 0.1,
-      "nudge_precision": 0.95
+      "nudge_precision": 0.95,
+      "everyday_nudge_rate": 0.05
     }
   },
   "policies": {
@@ -1404,7 +1406,7 @@
       "wrongful_rate_aae": 0.0,
       "wrongful_rate_white": 0.0,
       "review_load": 0.0577,
-      "nudged": 0.7983,
+      "nudged": 0.7478,
       "auto_removed": 0.0
     },
     "Triage: 10% to human review": {
@@ -1414,13 +1416,13 @@
       "wrongful_rate_aae": 0.0,
       "wrongful_rate_white": 0.0,
       "review_load": 0.1122,
-      "nudged": 0.747,
+      "nudged": 0.6986,
       "auto_removed": 0.0
     }
   },
   "policy_everyday_feed": {
-    "allow": 0.6065,
-    "nudge": 0.3935,
+    "allow": 0.9516,
+    "nudge": 0.0484,
     "review": 0.0,
     "remove": 0.0
   },
@@ -1433,7 +1435,7 @@
       "wrongful_rate_aae": 0.0,
       "wrongful_rate_white": 0.0,
       "review_load": 0.0087,
-      "nudged": 0.8422,
+      "nudged": 0.7779,
       "auto_removed": 0.0
     },
     {
@@ -1444,7 +1446,7 @@
       "wrongful_rate_aae": 0.0,
       "wrongful_rate_white": 0.0,
       "review_load": 0.0194,
-      "nudged": 0.8334,
+      "nudged": 0.7779,
       "auto_removed": 0.0
     },
     {
@@ -1455,7 +1457,7 @@
       "wrongful_rate_aae": 0.0,
       "wrongful_rate_white": 0.0,
       "review_load": 0.0577,
-      "nudged": 0.7983,
+      "nudged": 0.7478,
       "auto_removed": 0.0
     },
     {
@@ -1466,7 +1468,7 @@
       "wrongful_rate_aae": 0.0,
       "wrongful_rate_white": 0.0,
       "review_load": 0.1122,
-      "nudged": 0.747,
+      "nudged": 0.6986,
       "auto_removed": 0.0
     },
     {
@@ -1477,7 +1479,7 @@
       "wrongful_rate_aae": 0.0,
       "wrongful_rate_white": 0.0,
       "review_load": 0.1606,
-      "nudged": 0.7018,
+      "nudged": 0.6556,
       "auto_removed": 0.0
     },
     {
@@ -1488,7 +1490,7 @@
       "wrongful_rate_aae": 0.0,
       "wrongful_rate_white": 0.0,
       "review_load": 0.2122,
-      "nudged": 0.6536,
+      "nudged": 0.6088,
       "auto_removed": 0.0
     }
   ]
