@@ -10,8 +10,8 @@ To rebuild after retraining:
 python explainer/make_data.py explainer/data.json \
   "Had a great day at the beach with my family" "this damn printer jammed again" \
   "I hate pineapple on pizza" "I don't hate pineapple on pizza" "I hate rock music" \
-  "I am a queer person" "Saying rock fans are idiots is rude and wrong" \
-  "my brother be cooking for real tho" "I'm a proud Muslim woman"
+  "I am a white person" "Saying rock fans are idiots is rude and wrong" \
+  "my brother be cooking for real tho" "I'm a proud Canadian woman"
 python explainer/build.py explainer/data.json results/results.json explainer/index.html
 ```
 

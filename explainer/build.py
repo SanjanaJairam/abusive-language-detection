@@ -30,8 +30,8 @@ META = [
      "Not liking rock music isn't hate speech, but the model gives it a 15% chance of hate, just above the 13% review bar, so triage would send it to a person. "
      "“hate” pushes hard toward hate (+1.57), and “music” adds to it: 14% of the 74 training tweets containing “music” were labelled hate. Over-flagging like this is what fills reviewers' queues."),
     ("Where it fails", "An identity word",
-     "A harmless sentence from an identity-term test set. “queer” alone pushes +3.03 toward hate, the strongest push on this page, because 36% of training tweets containing it were labelled hate. "
-     "The model labels the sentence hate. Auto-removal would delete it; triage sends it to a person instead."),
+     "A harmless sentence from an identity-term test set. “white” alone pushes +2.77 toward hate, the strongest push on this page, because 32% of the 327 training tweets containing it were labelled hate. "
+     "The model labels the sentence hate, so auto-removal would delete it; triage sends it to a person instead. Across 757 harmless test sentences with “white”, the final model flags 59%, against 4% for the original: one fix made this word worse."),
     ("Where it fails", "Objecting to an insult",
      "Someone pushing back against rudeness. Repeating the insult brings in “idiots”, which pushes +2.14 toward offensive, and “rude” and “wrong” barely help. "
      "The model calls it 91% offensive, so triage nudges the person who was objecting. Counter-speech against real hate trips the model the same way: in the study's tests, 12% of it was called hate outright."),
@@ -39,8 +39,8 @@ META = [
      "Ordinary speech with habitual “be” and “tho”; the dialect model rates its language 62% African American English. No single word is strong, but most push slightly toward offensive, reaching 59%. "
      "It falls just under the nudge bar, so triage allows it, but the model still labels it offensive and “remove anything flagged” would delete it. Across the dataset, that pattern is what makes harmless AAE-aligned posts far more likely to be flagged."),
     ("Better than before", "A proud identity statement",
-     "“Muslim” still pushes toward hate (+1.09), but “proud” and the starting point outweigh it, and the post is labelled neither at 63%. "
-     "The original model called this post offensive. Training on everyday tweets and swapping identity words is what changed it."),
+     "“Canadian” barely pushes either way, “proud” pulls toward neither, and the post is labelled neither at 66%. The original model called it offensive. "
+     "Across 757 harmless test sentences mentioning Canadians, false flags fell from 7% to 0.5% after training on everyday tweets and swapping identity words."),
 ]
 assert len(META) == len(model["examples"])
 for ex, (group, title, takeaway) in zip(model["examples"], META):
