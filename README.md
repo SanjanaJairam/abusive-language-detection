@@ -2,6 +2,8 @@
 
 This project looks at how well machine learning models actually detect hate speech, and whether they treat different types of language fairly.
 
+**[Try the interactive explainer →](https://abusive-language-detection-explaine.vercel.app/)** It walks through, word by word, how the model reads a post and decides what to do with it.
+
 It builds on an earlier course project where I trained models to classify tweets as hate speech, offensive language, or neither. I wanted to revisit that work and look beyond accuracy to understand where the models were making mistakes.
 
 > **Content note:** the datasets contain racist, sexist and homophobic language. No examples are reproduced here.

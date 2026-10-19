@@ -1,6 +1,6 @@
 # How a Filter Reads a Post
 
-A guided explainer: nine example posts, each walked through the five steps the final model takes (clean, split into pieces, weigh each word, add it up, decide). Open `index.html` in a browser; it needs no server.
+A guided explainer: nine example posts, each walked through the five steps the final model takes (clean, split into pieces, weigh each word, add it up, decide). Live at https://abusive-language-detection-explaine.vercel.app/ (Vercel, root directory `explainer`). Locally, open `index.html` in a browser; it needs no server.
 
 Every number comes from the real final model. The model is linear, so each word's push toward *hate*, *offensive* or *neither* adds up exactly to the model's own score (`make_data.py` checks this).
 
