@@ -314,22 +314,12 @@ function renderTabs() {
 }
 
 function stageClean(ex) {
-  const raw = ex.raw;
-  const rules = [
-    ["Lowercase everything", raw !== raw.toLowerCase()],
-    ["Replace links with URL", /https?:\/\/|www\./.test(raw)],
-    ["Replace @names with @USER", /@\w/.test(raw)],
-    ["Drop the # from hashtags", raw.includes("#")],
-    ["Shorten long letter runs (soooooo → sooo)", /(.)\1{3,}/.test(raw)],
-    ["Remove the retweet marker RT", /^\s*rt\b/i.test(raw)],
-  ];
   return `<h2>Clean the text</h2>
     <p class="explain">The filter tidies the text so small typing differences don't matter.</p>
     <div class="compare">
-      <div class="row"><span class="k">Posted</span><div class="code">${esc(raw)}</div></div>
+      <div class="row"><span class="k">Posted</span><div class="code">${esc(ex.raw)}</div></div>
       <div class="row"><span class="k">Cleaned</span><div class="code">${esc(ex.clean)}</div></div>
-    </div>
-    <ul class="rules">${rules.map(([r, on]) => `<li><span class="mark ${on ? "on" : ""}">${on ? "applied" : "not needed"}</span>${esc(r)}</li>`).join("")}</ul>`;
+    </div>`;
 }
 
 function chunksOf(word) {
