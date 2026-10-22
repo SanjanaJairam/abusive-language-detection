@@ -249,6 +249,13 @@ const STAGES = [
   ["Clean", "clean"], ["Split into pieces", "split"], ["Weigh each word", "weigh"], ["Add it up", "add"], ["Decide", "decide"]
 ];
 const pct = v => Math.round(v * 100) + "%";
+/** Whole percentages that always sum to 100 (largest-remainder rounding). */
+const pcts = arr => {
+  const raw = arr.map(v => v * 100), out = raw.map(Math.floor);
+  let left = 100 - out.reduce((a, b) => a + b, 0);
+  raw.map((v, i) => [v - Math.floor(v), i]).sort((a, b) => b[0] - a[0]).forEach(([, i]) => { if (left > 0) { out[i]++; left--; } });
+  return out.map(v => v + "%");
+};
 const num = v => (v > 0 ? "+" : v < 0 ? "−" : "") + Math.abs(v).toFixed(2);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
 const argmax = a => a.indexOf(Math.max(...a));
@@ -301,7 +308,8 @@ function renderPost(ex) {
     state.word = +c.dataset.w; state.stage = 2; save(); render();
   }));
   document.getElementById("probline").innerHTML = ex.probs.map((p, k) => `<i style="width:${p * 100}%;background:${COLOR[CLASSES[k]]}"></i>`).join("");
-  document.getElementById("probkey").innerHTML = ex.probs.map((p, k) => `<span>${CLASSES[k]} <b>${pct(p)}</b></span>`).join("");
+  const shown = pcts(ex.probs);
+  document.getElementById("probkey").innerHTML = ex.probs.map((p, k) => `<span>${CLASSES[k]} <b>${shown[k]}</b></span>`).join("");
 }
 
 function renderTabs() {
@@ -374,24 +382,25 @@ function stageAdd(ex) {
   const sum = [0, 1, 2].map(k => ex.words.reduce((s, w) => s + w.push[k], 0));
   const score = [0, 1, 2].map(k => ex.start[k] + sum[k]);
   const win = argmax(score);
+  const rawShown = pcts(ex.raw_probs), calShown = pcts(ex.probs);
   return `<h2>Add it up</h2>
     <p class="explain">Start point + every word's push = a total per label. The highest wins; totals then become calibrated chances.</p>
     <div class="tablewrap"><table>
       <thead><tr><th>Label</th><th>Starting point</th><th>+ all words</th><th>= total</th><th>Chance</th><th>Calibrated</th></tr></thead>
       <tbody>${CLASSES.map((c, k) => `<tr class="${k === win ? "win" : ""}"><td><span style="color:${COLOR[c]}">■</span> ${c}</td>
-        <td>${num(ex.start[k])}</td><td>${num(sum[k])}</td><td>${num(score[k])}</td><td>${pct(ex.raw_probs[k])}</td><td>${pct(ex.probs[k])}</td></tr>`).join("")}</tbody>
+        <td>${num(ex.start[k])}</td><td>${num(sum[k])}</td><td>${num(score[k])}</td><td>${rawShown[k]}</td><td>${calShown[k]}</td></tr>`).join("")}</tbody>
     </table></div>
     <div class="probbars">${ex.probs.map((p, k) => `<div class="pb"><span>${CLASSES[k]}</span>
-      <span class="track"><span class="fill" style="left:0;width:${p * 100}%;background:${COLOR[CLASSES[k]]}"></span></span><span class="v">${pct(p)}</span></div>`).join("")}</div>
+      <span class="track"><span class="fill" style="left:0;width:${p * 100}%;background:${COLOR[CLASSES[k]]}"></span></span><span class="v">${calShown[k]}</span></div>`).join("")}</div>
     `;
 }
 
 function stageDecide(ex) {
-  const p = ex.probs;
+  const p = ex.probs, P = pcts(p);
   const flagged = argmax(p) !== 2;
   const triage = ex.triage;
-  const triageWhy = triage === "review" ? `Hate ${pct(p[0])} is over the review bar (${pct(TH.t_review)}).`
-    : triage === "nudge" ? `Offensive ${pct(p[1])} is over the nudge bar (${pct(TH.t_nudge)}).`
+  const triageWhy = triage === "review" ? `Hate ${P[0]} is over the review bar (${pct(TH.t_review)}).`
+    : triage === "nudge" ? `Offensive ${P[1]} is over the nudge bar (${pct(TH.t_nudge)}).`
     : `Under both bars.`;
   const act = { allow: "Allow", nudge: "Ask author to reconsider", review: "Send to a person", remove: "Remove" };
   return `<h2>Decide what happens</h2>
@@ -402,7 +411,7 @@ function stageDecide(ex) {
         <p class="why">The model's label is ${esc(ex.label)}.</p></div>
       <div class="policy"><h3>Remove anything flagged</h3><p class="rule">Remove anything most likely hate or offensive.</p>
         <span class="pill ${flagged ? "remove" : "allow"}">${flagged ? "Remove" : "Allow"}</span>
-        <p class="why">Most likely label: ${CLASSES[argmax(p)]} (${pct(Math.max(...p))}).</p></div>
+        <p class="why">Most likely label: ${CLASSES[argmax(p)]} (${P[argmax(p)]}).</p></div>
       <div class="policy recommended"><span class="tag">Safer design</span><h3>Triage</h3><p class="rule">Never removes on its own. The riskiest 10% go to a person; clearly offensive posts get a nudge.</p>
         <span class="pill ${triage}">${act[triage]}</span>
         <p class="why">${triageWhy}</p></div>

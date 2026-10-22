@@ -27,7 +27,7 @@ META = [
     ("Where it fails", "An identity word",
      "A harmless sentence called 62% offensive. Harmless sentences with “latinx” get flagged 80% of the time, and 92% by a modern model."),
     ("Where it fails", "Objecting to an insult",
-     "Repeating the insult makes it 91% offensive, so the person pushing back gets nudged."),
+     "Repeating the insult makes it 90% offensive, so the person pushing back gets nudged."),
     ("Where it fails", "African American English",
      "Everyday speech, labelled offensive. Across the dataset, harmless AAE-aligned posts were flagged 37% of the time vs 6% for White-aligned."),
     ("Better than before", "A proud identity statement",
