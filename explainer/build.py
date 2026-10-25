@@ -25,7 +25,7 @@ META = [
     ("Where it fails", "Disliking a music genre",
      "Not hate speech, but 15% hate is over the review bar, so a person would have to check it."),
     ("Where it fails", "An identity word",
-     "A harmless sentence called 62% offensive. Harmless sentences with “latinx” get flagged 80% of the time, and 92% by a modern model."),
+     "Labelled neither, but 17% hate is over the review bar, so a person would have to check a harmless statement of identity."),
     ("Where it fails", "Objecting to an insult",
      "Repeating the insult makes it 90% offensive, so the person pushing back gets nudged."),
     ("Where it fails", "African American English",
